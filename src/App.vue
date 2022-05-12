@@ -1,10 +1,10 @@
 <template>
-  <div id="nav">
+  <!-- <div id="nav">
     <span v-if="userLoggedIn"><a v-on:click="logout()" class="nav-item">Logout</a> | </span>
     <span v-else><router-link to="/login">Login</router-link> | </span>
     <router-link to="/">Home</router-link> |
     <router-link to="/about">About</router-link>
-  </div>
+  </div> -->
   <router-view />
 </template>
 <script>
@@ -21,7 +21,6 @@ export default {
   mounted() {
     this.userLoggedIn = false
     this.isLoggedIn()
-    console.log("test")
   },
   methods: {
     isLoggedIn () {
@@ -45,6 +44,12 @@ export default {
 </script>
 
 <style>
+
+* {
+    padding: 0;
+    margin: 0;
+}
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

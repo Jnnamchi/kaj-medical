@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import Home from "../views/Home.vue";
 import LandingPage from "../views/LandingPage.vue";
 import LoginPage from "../views/LoginPage.vue";
-import { getUserLoggedIn } from "../firebase"
+// import { getUserLoggedIn } from "../firebase"
 
 const routes = [
   {
@@ -36,23 +36,23 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach(async (to, from, next) => {
-  if (to == from) {
-    return
-  }
-  if (!await getUserLoggedIn()){
-    if (to.path == '/login') {
-      next()
-    } else {
-      next('/login')
-    }
-  } else {
-    if (to.path == '/login') {
-      next('/home')
-    } else {
-      next()
-    }
-  }
-})
+// router.beforeEach(async (to, from, next) => {
+//   if (to == from) {
+//     return
+//   }
+//   if (!await getUserLoggedIn()){
+//     if (to.path == '/login') {
+//       next()
+//     } else {
+//       next('/login')
+//     }
+//   } else {
+//     if (to.path == '/login') {
+//       next('/home')
+//     } else {
+//       next()
+//     }
+//   }
+// })
 
 export default router;
