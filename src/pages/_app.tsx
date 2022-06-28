@@ -1,12 +1,29 @@
 import React from "react";
-import "../styles/globals.css";
+import { NextPage } from "next";
 import { AppProps } from "next/app";
 import { AuthContextProvider } from "../context/AuthContext";
+import ProtectedRoute from "../components/authPage/ProtectedRoute";
+import "../styles/globals.css";
+export type NextApplicationPage<P = any, IP = P> = NextPage<P, IP> & {
+  requireAuth?: boolean;
+};
+export default function App(props: AppProps) {
+  const {
+    Component,
+    pageProps,
+  }: { Component: NextApplicationPage; pageProps: any } = props;
 
-export default function App({ Component, pageProps }: AppProps): JSX.Element {
   return (
     <AuthContextProvider>
-      <Component {...pageProps} />
+      {Component.requireAuth ? (
+        <ProtectedRoute>
+          <Component {...pageProps} />
+        </ProtectedRoute>
+      ) : (
+        // public page
+        <Component {...pageProps} />
+      )}
+      {/* <Component {...pageProps} /> */}
     </AuthContextProvider>
   );
 }
