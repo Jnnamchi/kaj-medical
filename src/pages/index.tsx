@@ -1,7 +1,13 @@
 import { useState } from "react";
+import { useAuth } from "../context/AuthContext";
 
 export default function Home() {
-  const [loginData, setLoginData] = useState({});
+  const [showRegisterForm, setShowRegisterForm] = useState(false);
+  const [loginData, setLoginData] = useState({
+    email: "",
+    password: "",
+  });
+  const { login, signup } = useAuth();
 
   const handleChangeData = (e: any) =>
     setLoginData({
@@ -9,11 +15,16 @@ export default function Home() {
       [e.target.name]: e.target.value,
     });
 
-  const handleSubmitLogin = () => {
-    console.log(
-      "🚀 ~ file: index.tsx ~ line 15 ~ handleSubmitLogin ~ loginData",
-      loginData
-    );
+  const handleSubmitLogin = async () => {
+    try {
+      if (showRegisterForm) {
+        await signup(loginData.email, loginData.password);
+      } else {
+        await login(loginData.email, loginData.password);
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
   return (
     <div className="container px-4 mx-auto">
@@ -30,7 +41,9 @@ export default function Home() {
             <div className="mb-12 xl:ml-20 xl:w-5/12 lg:w-5/12 md:w-8/12 md:mb-0">
               <form>
                 <div className="flex flex-row items-center justify-center lg:justify-start">
-                  <p className="mb-0 mr-4 text-lg">Sign in with</p>
+                  <p className="mb-0 mr-4 text-lg">
+                    {showRegisterForm ? "Register" : "Sign in"} with
+                  </p>
                   <button
                     type="button"
                     data-mdb-ripple="true"
@@ -142,16 +155,20 @@ export default function Home() {
                     className="inline-block py-3 text-sm font-medium leading-snug text-white uppercase transition duration-150 ease-in-out bg-blue-600 rounded shadow-md px-7 hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg"
                     onClick={handleSubmitLogin}
                   >
-                    Login
+                    {showRegisterForm ? "Register" : "Login"}
                   </button>
-                  <p className="pt-1 mt-2 mb-0 text-sm font-semibold">
-                    Don't have an account?
-                    <a
-                      href="#!"
-                      className="text-red-600 transition duration-200 ease-in-out hover:text-red-700 focus:text-red-700"
-                    >
-                      Register
-                    </a>
+                  <p
+                    className="pt-1 mt-2 mb-0 text-sm font-semibold"
+                    onClick={() => setShowRegisterForm(!showRegisterForm)}
+                  >
+                    <span>
+                      {showRegisterForm
+                        ? "Already have an account?"
+                        : `Don't have an account?`}
+                    </span>
+                    <span className="ml-2 text-red-600 transition duration-200 ease-in-out cursor-pointer hover:text-red-700 focus:text-red-700">
+                      {showRegisterForm ? "Login" : "Register"}
+                    </span>
                   </p>
                 </div>
               </form>
