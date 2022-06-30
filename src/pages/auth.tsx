@@ -1,8 +1,7 @@
 import { useRouter } from "next/router";
 import { useState } from "react";
+import { collection, addDoc } from "firebase/firestore";
 import { useAuth } from "../context/AuthContext";
-
-import { collection, addDoc, getDocs } from "firebase/firestore";
 import { database } from "../config/firebase";
 
 export default function Auth() {
@@ -33,13 +32,9 @@ export default function Auth() {
           router.push("/");
         }
       } else {
-        const { user } = await login(loginData.email, loginData.password);
-        const userData = await getUserData(user.email);
-        console.log(
-          "🚀 ~ file: auth.tsx ~ line 38 ~ handleSubmitLogin ~ data",
-          userData
-        );
-        if (userData.isAdmin) {
+        const res = await login(loginData.email, loginData.password);
+        if (res.user) {
+          router.push("/");
         }
       }
     } catch (err) {
@@ -48,18 +43,6 @@ export default function Auth() {
   };
 
   const handleAuthWithGoogle = () => authWithGoogle();
-
-  const getUserData = async (email: string) => {
-    let data = await getDocs(databaseRef);
-
-    const savedUserData = data.docs.map((data: any) => ({
-      ...data.data(),
-      id: data.id,
-    }));
-
-    const userData = savedUserData.find((user: any) => user.email === email);
-    return userData;
-  };
 
   return (
     <div className="container px-4 mx-auto">
