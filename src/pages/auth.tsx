@@ -2,13 +2,18 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 
-export default function Home() {
+import { collection, addDoc, getDocs } from "firebase/firestore";
+import { database } from "../config/firebase";
+
+export default function Auth() {
   const [showRegisterForm, setShowRegisterForm] = useState(false);
   const [loginData, setLoginData] = useState({
     email: "",
     password: "",
   });
   const { login, signup, authWithGoogle } = useAuth();
+
+  const databaseRef = collection(database, "User Data");
 
   const router = useRouter();
 
@@ -19,6 +24,23 @@ export default function Home() {
     });
 
   const handleSubmitLogin = async () => {
+    addDoc(databaseRef, {
+      name: "ShiXiong",
+      age: 27,
+    })
+      .then(() => {
+        alert("Data Sent");
+        getData().then((res) => {
+          console.log(
+            "🚀 ~ saved res: auth.tsx ~ line 50 ~ getData ~ res",
+            res
+          );
+        });
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+    return;
     try {
       if (showRegisterForm) {
         signup(loginData.email, loginData.password).then((res: any) => {
@@ -40,6 +62,14 @@ export default function Home() {
 
   const handleAuthWithGoogle = () => authWithGoogle();
 
+  const getData = async () => {
+    await getDocs(databaseRef).then((response: any) => {
+      console.log(
+        "🚀 ~ file: auth.tsx ~ line 67 ~ awaitgetDocs ~ response",
+        response
+      );
+    });
+  };
   return (
     <div className="container px-4 mx-auto">
       <section className="h-screen ">
