@@ -52,9 +52,13 @@ export const AuthContextProvider = ({
     await signOut(auth);
   };
 
+  const updateUser = (user: any) => {
+    setUser(user);
+  };
+
   return (
     <AuthContext.Provider
-      value={{ user, login, signup, logout, authWithGoogle }}
+      value={{ user, login, signup, logout, authWithGoogle, updateUser }}
     >
       {loading ? null : children}
     </AuthContext.Provider>

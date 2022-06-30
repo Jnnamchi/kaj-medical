@@ -6,16 +6,14 @@ import { collection, addDoc, getDocs } from "firebase/firestore";
 import { database } from "../config/firebase";
 
 export default function Auth() {
+  const router = useRouter();
   const [showRegisterForm, setShowRegisterForm] = useState(false);
+  const { login, signup, authWithGoogle } = useAuth();
   const [loginData, setLoginData] = useState({
     email: "",
     password: "",
   });
-  const { login, signup, authWithGoogle } = useAuth();
-
   const databaseRef = collection(database, "User Data");
-
-  const router = useRouter();
 
   const handleChangeData = (e: any) =>
     setLoginData({
@@ -24,36 +22,25 @@ export default function Auth() {
     });
 
   const handleSubmitLogin = async () => {
-    addDoc(databaseRef, {
-      name: "ShiXiong",
-      age: 27,
-    })
-      .then(() => {
-        alert("Data Sent");
-        getData().then((res) => {
-          console.log(
-            "🚀 ~ saved res: auth.tsx ~ line 50 ~ getData ~ res",
-            res
-          );
-        });
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-    return;
     try {
       if (showRegisterForm) {
-        signup(loginData.email, loginData.password).then((res: any) => {
-          if (res.user) {
-            router.push("/");
-          }
-        });
+        const res = await signup(loginData.email, loginData.password);
+        if (res.user) {
+          await addDoc(databaseRef, {
+            id: res.user.uid,
+            email: res.user.email,
+          });
+          router.push("/");
+        }
       } else {
-        login(loginData.email, loginData.password).then((res: any) => {
-          if (res.user) {
-            router.push("/");
-          }
-        });
+        const { user } = await login(loginData.email, loginData.password);
+        const userData = await getUserData(user.email);
+        console.log(
+          "🚀 ~ file: auth.tsx ~ line 38 ~ handleSubmitLogin ~ data",
+          userData
+        );
+        if (userData.isAdmin) {
+        }
       }
     } catch (err) {
       console.log(err);
@@ -62,14 +49,18 @@ export default function Auth() {
 
   const handleAuthWithGoogle = () => authWithGoogle();
 
-  const getData = async () => {
-    await getDocs(databaseRef).then((response: any) => {
-      console.log(
-        "🚀 ~ file: auth.tsx ~ line 67 ~ awaitgetDocs ~ response",
-        response
-      );
-    });
+  const getUserData = async (email: string) => {
+    let data = await getDocs(databaseRef);
+
+    const savedUserData = data.docs.map((data: any) => ({
+      ...data.data(),
+      id: data.id,
+    }));
+
+    const userData = savedUserData.find((user: any) => user.email === email);
+    return userData;
   };
+
   return (
     <div className="container px-4 mx-auto">
       <section className="h-screen ">
