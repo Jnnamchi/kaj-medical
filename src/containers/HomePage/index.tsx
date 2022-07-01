@@ -168,9 +168,9 @@ export default function HomePage() {
             <p className="w-full uppercase tracking-loose">
               What business are you?
             </p>
-            {userData && (
+            {user && (
               <h1 className="my-4 text-5xl font-bold leading-tight">
-                Welcome {userData.user_name} !
+                Welcome {user.displayName} !
               </h1>
             )}
             <p className="mb-8 text-2xl leading-normal">
