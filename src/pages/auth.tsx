@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { collection, addDoc } from "firebase/firestore";
 import { useAuth } from "../context/AuthContext";
 import { database } from "../config/firebase";
@@ -7,7 +7,7 @@ import { database } from "../config/firebase";
 export default function Auth() {
   const router = useRouter();
   const [showRegisterForm, setShowRegisterForm] = useState(false);
-  const { login, signup, authWithGoogle } = useAuth();
+  const { login, signup, authWithGoogle, user } = useAuth();
   const [loginData, setLoginData] = useState({
     email: "",
     password: "",
@@ -29,12 +29,10 @@ export default function Auth() {
             id: res.user.uid,
             email: res.user.email,
           });
-          router.push("/");
         }
       } else {
         const res = await login(loginData.email, loginData.password);
         if (res.user) {
-          router.push("/");
         }
       }
     } catch (err) {
@@ -43,6 +41,12 @@ export default function Auth() {
   };
 
   const handleAuthWithGoogle = () => authWithGoogle();
+
+  useEffect(() => {
+    if (user) {
+      router.push("/");
+    }
+  }, [user]);
 
   return (
     <div className="container px-4 mx-auto">
