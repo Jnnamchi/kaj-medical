@@ -140,14 +140,16 @@ export default function HomePage() {
                 </a>
               </li>
 
-              <li className="mr-3">
-                <a
-                  className="inline-block px-4 py-2 text-black no-underline hover:text-gray-800 hover:text-underline"
-                  href="#"
-                >
-                  Admin
-                </a>
-              </li>
+              {userData && userData.isAdmin && (
+                <li className="mr-3">
+                  <a
+                    className="inline-block px-4 py-2 text-black no-underline hover:text-gray-800 hover:text-underline"
+                    href="#"
+                  >
+                    Admin
+                  </a>
+                </li>
+              )}
             </ul>
             <button
               onClick={logout}
@@ -166,9 +168,11 @@ export default function HomePage() {
             <p className="w-full uppercase tracking-loose">
               What business are you?
             </p>
-            <h1 className="my-4 text-5xl font-bold leading-tight">
-              Welcome {userData.user_name} !
-            </h1>
+            {userData && (
+              <h1 className="my-4 text-5xl font-bold leading-tight">
+                Welcome {userData.user_name} !
+              </h1>
+            )}
             <p className="mb-8 text-2xl leading-normal">
               Sub-hero message, not too long and not too short. Make it just
               right!
