@@ -37,7 +37,7 @@ const AuthPage = () => {
 
   useEffect(() => {
     if (user) {
-      router.push("/");
+      router.push("/onboard");
     }
   }, [user]);
 
