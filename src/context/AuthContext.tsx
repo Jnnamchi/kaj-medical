@@ -1,11 +1,11 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import {
-  onAuthStateChanged,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  GoogleAuthProvider,
   signOut,
   signInWithPopup,
+  GoogleAuthProvider,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
 } from "firebase/auth";
 import { auth } from "../config/firebase";
 
@@ -19,7 +19,6 @@ export const AuthContextProvider = ({
   children: React.ReactNode;
 }) => {
   const [user, setUser] = useState<any>(null);
-  console.log("🚀 ~ file: AuthContext.tsx ~ line 22 ~ user", user);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -28,6 +27,7 @@ export const AuthContextProvider = ({
         setUser({
           uid: user.uid,
           email: user.email,
+          user_name: user.displayName,
         });
       } else {
         setUser(null);

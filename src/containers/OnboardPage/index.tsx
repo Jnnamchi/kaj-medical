@@ -1,9 +1,12 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import * as Yup from "yup";
 import Select from "react-select";
 import { Formik, Form, Field } from "formik";
 import { collection, doc, updateDoc, getDocs } from "firebase/firestore";
+
 import { database } from "../../config/firebase";
+import { useAuth } from "../../context/AuthContext";
 
 const options = [
   { value: "broker", label: "Business Broker" },
@@ -17,14 +20,28 @@ const options = [
   { value: "other", label: "Other" },
 ];
 
-import * as Yup from "yup";
-import { useAuth } from "../../context/AuthContext";
-
 const OnBoardPage = () => {
   const { user } = useAuth();
   const router = useRouter();
   const databaseRef = collection(database, "User Data");
   const [userData, setUserData] = useState<any>();
+
+  const validationSchema = Yup.object().shape({
+    fullName: Yup.string()
+      .required("Full Name is required")
+      .max(50, "Sorry, name is too long"),
+  });
+
+  const handleSubmit = async (values: any) => {
+    if (userData) {
+      updateDoc(doc(databaseRef, userData.docId), {
+        user_name: values.fullName,
+        user_type: values.entity,
+      }).then(() => {
+        router.push("/");
+      });
+    }
+  };
 
   const getData = async () => {
     const userDB = await getDocs(databaseRef);
@@ -38,36 +55,23 @@ const OnBoardPage = () => {
     }
   };
 
-  const validationSchema = Yup.object().shape({
-    fullName: Yup.string()
-      .required("Full Name is required")
-      .max(50, "Sorry, name is too long"),
-  });
-
-  const handleSubmit = async (values: any) => {
-    updateDoc(doc(databaseRef, userData.docId), {
-      user_name: values.fullName,
-      user_type: values.entity,
-    }).then(() => {
-      router.push("/");
-    });
-  };
-
   useEffect(() => {
     getData();
   }, []);
+
   useEffect(() => {
     if (userData && userData.user_type) {
       router.push("/");
     }
   }, [userData]);
+
   return (
     <div className="container px-4 mx-auto">
       <section className="h-screen ">
         <div className="flex items-center justify-center h-full">
           <Formik
             initialValues={{
-              fullName: "",
+              fullName: user && user.user_name ? user.user_name : "",
               entity: "",
             }}
             validationSchema={validationSchema}

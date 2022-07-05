@@ -2,7 +2,7 @@ import * as Yup from "yup";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Formik, Form, Field } from "formik";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, getDocs } from "firebase/firestore";
 import { useAuth } from "../../context/AuthContext";
 import { database } from "../../config/firebase";
 
@@ -10,32 +10,65 @@ const AuthPage = () => {
   const router = useRouter();
   const [showRegisterForm, setShowRegisterForm] = useState(false);
   const { login, signup, authWithGoogle, user } = useAuth();
+  const [isSocialLogin, setIsSocialLogin] = useState(false);
 
   const databaseRef = collection(database, "User Data");
+
+  const getData = async () => {
+    const userDB = await getDocs(databaseRef);
+    const users: any = userDB.docs.map((doc) => ({
+      ...doc.data(),
+      docId: doc.id,
+    }));
+    const self = users.find((data: any) => data.email === user.email);
+    return self;
+  };
+
+  const addUserDataToFireStore = async (user: {
+    uid: string;
+    email: string;
+    user_name?: string;
+  }) => {
+    await addDoc(databaseRef, {
+      id: user.uid,
+      email: user.email,
+      user_name: user.user_name || "",
+    });
+  };
 
   const handleSubmit = async (values: { email: string; password: string }) => {
     try {
       if (showRegisterForm) {
         const res = await signup(values.email, values.password);
         if (res.user) {
-          await addDoc(databaseRef, {
-            id: res.user.uid,
-            email: res.user.email,
-          });
+          await addUserDataToFireStore(res.user);
+          router.push("/onboard");
         }
       } else {
         await login(values.email, values.password);
+        router.push("/onboard");
       }
     } catch (err) {
       console.log(err);
     }
   };
 
-  const handleAuthWithGoogle = () => authWithGoogle();
+  const handleAuthWithGoogle = () => {
+    setIsSocialLogin(true);
+    authWithGoogle();
+  };
 
   useEffect(() => {
-    if (user) {
-      router.push("/onboard");
+    if (isSocialLogin && user) {
+      getData().then(async (res) => {
+        if (res) {
+          router.push("/");
+        } else {
+          await addUserDataToFireStore(user);
+          router.push("/onboard");
+        }
+        setIsSocialLogin(false);
+      });
     }
   }, [user]);
 
