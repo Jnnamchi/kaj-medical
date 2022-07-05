@@ -24,9 +24,7 @@ const AuthPage = () => {
           });
         }
       } else {
-        const res = await login(values.email, values.password);
-        if (res.user) {
-        }
+        await login(values.email, values.password);
       }
     } catch (err) {
       console.log(err);

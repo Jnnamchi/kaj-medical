@@ -170,7 +170,7 @@ export default function HomePage() {
             </p>
             {user && (
               <h1 className="my-4 text-5xl font-bold leading-tight">
-                Welcome {user.displayName} !
+                Welcome {user?.displayName} !
               </h1>
             )}
             <p className="mb-8 text-2xl leading-normal">

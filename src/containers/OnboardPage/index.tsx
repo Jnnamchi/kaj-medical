@@ -1,6 +1,9 @@
-import { Formik, Form, Field } from "formik";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import Select from "react-select";
+import { Formik, Form, Field } from "formik";
+import { collection, doc, updateDoc, getDocs } from "firebase/firestore";
+import { database } from "../../config/firebase";
 
 const options = [
   { value: "broker", label: "Business Broker" },
@@ -15,9 +18,26 @@ const options = [
 ];
 
 import * as Yup from "yup";
+import { useAuth } from "../../context/AuthContext";
 
 const OnBoardPage = () => {
+  const { user } = useAuth();
   const router = useRouter();
+  const databaseRef = collection(database, "User Data");
+  const [userData, setUserData] = useState<any>();
+
+  const getData = async () => {
+    const userDB = await getDocs(databaseRef);
+    const users: any = userDB.docs.map((doc) => ({
+      ...doc.data(),
+      docId: doc.id,
+    }));
+    const self = users.find((data: any) => data.email === user.email);
+    if (self) {
+      setUserData(self);
+    }
+  };
+
   const validationSchema = Yup.object().shape({
     fullName: Yup.string()
       .required("Full Name is required")
@@ -25,18 +45,31 @@ const OnBoardPage = () => {
   });
 
   const handleSubmit = async (values: any) => {
-    console.log(
-      "🚀 ~ file: index.tsx ~ line 26 ~ handleSubmit ~ values",
-      values
-    );
-    router.push("/");
+    updateDoc(doc(databaseRef, userData.docId), {
+      user_name: values.fullName,
+      user_type: values.entity,
+    }).then(() => {
+      router.push("/");
+    });
   };
+
+  useEffect(() => {
+    getData();
+  }, []);
+  useEffect(() => {
+    if (userData && userData.user_type) {
+      router.push("/");
+    }
+  }, [userData]);
   return (
     <div className="container px-4 mx-auto">
       <section className="h-screen ">
         <div className="flex items-center justify-center h-full">
           <Formik
-            initialValues={{ fullName: "", entity: "" }}
+            initialValues={{
+              fullName: "",
+              entity: "",
+            }}
             validationSchema={validationSchema}
             onSubmit={handleSubmit}
           >
