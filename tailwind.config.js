@@ -6,7 +6,11 @@ module.exports = {
   ],
   darkMode: "media", // or 'media' or 'class'
   theme: {
-    extend: {},
+    extend: {
+      backgroundImage: {
+        header: "url('/image/header/header.png')",
+      },
+    },
   },
   variants: {
     extend: {},

@@ -2,10 +2,10 @@ import Header from "./header";
 
 const Layout = ({ children }: any) => {
   return (
-    <div>
+    <section className="h-screen ">
       <Header />
-      {children}
-    </div>
+      <div className="h-full ">{children}</div>
+    </section>
   );
 };
 export default Layout;

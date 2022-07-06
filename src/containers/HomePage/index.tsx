@@ -33,34 +33,32 @@ const HomePage = () => {
 
   return (
     <div className="container px-4 mx-auto">
-      <section className="h-screen ">
-        <div className="p-6 py-8 space-y-8">
-          <div>
-            {userData && (
-              <>
-                <p className="text-2xl text-center">
-                  Welcome, {userData.user_name} !
-                </p>
-                <p className="mt-4 text-sm text-center">
-                  {
-                    userTypeOptions.find(
-                      (option) => option.value === userData.user_type
-                    )?.label
-                  }
-                </p>
-              </>
-            )}
+      <div className="p-6 py-8 space-y-8">
+        <div>
+          {userData && (
+            <>
+              <p className="text-2xl text-center">
+                Welcome, {userData.user_name} !
+              </p>
+              <p className="mt-4 text-sm text-center">
+                {
+                  userTypeOptions.find(
+                    (option) => option.value === userData.user_type
+                  )?.label
+                }
+              </p>
+            </>
+          )}
+        </div>
+        <div className="flex justify-center space-x-4 text-sm">
+          <div className="px-6 py-2 text-gray-800 cursor-pointer bg-neutral-200 ">
+            Submit a new inquiry
           </div>
-          <div className="flex justify-center space-x-4 text-sm">
-            <div className="px-6 py-2 text-gray-800 cursor-pointer bg-neutral-200 ">
-              Submit a new inquiry
-            </div>
-            <div className="px-6 py-2 text-gray-800 cursor-pointer bg-neutral-200 ">
-              View my inquiries
-            </div>
+          <div className="px-6 py-2 text-gray-800 cursor-pointer bg-neutral-200 ">
+            View my inquiries
           </div>
         </div>
-      </section>
+      </div>
     </div>
   );
 };
