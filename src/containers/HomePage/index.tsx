@@ -11,6 +11,7 @@ const HomePage = () => {
   const router = useRouter();
   const databaseRef = collection(database, "User Data");
   const [userData, setUserData] = useState<any>();
+  console.log("🚀 ~ file: index.tsx ~ line 14 ~ HomePage ~ userData", userData);
 
   const getData = async () => {
     const userDB = await getDocs(databaseRef);
@@ -29,8 +30,8 @@ const HomePage = () => {
   }, []);
 
   useEffect(() => {
-    if (userData && !userData.user_type) {
-      router.push("/onboarding");
+    if (!userData) {
+      router.push("/onboard");
     }
   }, [userData]);
 
