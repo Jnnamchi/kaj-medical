@@ -29,8 +29,8 @@ const HomePage = () => {
   }, []);
 
   useEffect(() => {
-    if (userData && userData.user_type) {
-      router.push("/");
+    if (userData && !userData.user_type) {
+      router.push("/onboarding");
     }
   }, [userData]);
 
