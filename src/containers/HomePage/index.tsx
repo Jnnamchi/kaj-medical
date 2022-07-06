@@ -22,18 +22,14 @@ const HomePage = () => {
     const self = users.find((data: any) => data.email === user.email);
     if (self) {
       setUserData(self);
+    } else {
+      router.push("/onboard");
     }
   };
 
   useEffect(() => {
     getData();
   }, []);
-
-  useEffect(() => {
-    if (!userData) {
-      router.push("/onboard");
-    }
-  }, [userData]);
 
   return (
     <div className="container px-4 mx-auto">
@@ -45,13 +41,12 @@ const HomePage = () => {
                 <p className="text-2xl text-center">
                   Welcome, {userData.user_name} !
                 </p>
-                {/* userData.user_type */}
                 <p className="mt-4 text-sm text-center">
                   {
                     userTypeOptions.find(
                       (option) => option.value === userData.user_type
                     )?.label
-                  }{" "}
+                  }
                 </p>
               </>
             )}
