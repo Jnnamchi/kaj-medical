@@ -10,7 +10,6 @@ const AuthPage = () => {
   const router = useRouter();
   const [showRegisterForm, setShowRegisterForm] = useState(false);
   const { login, signup, authWithGoogle, user } = useAuth();
-  const [isSocialLogin, setIsSocialLogin] = useState(false);
 
   const databaseRef = collection(database, "User Data");
 
@@ -46,7 +45,6 @@ const AuthPage = () => {
         }
       } else {
         await login(values.email, values.password);
-        router.push("/onboard");
       }
     } catch (err) {
       console.log(err);
@@ -54,12 +52,11 @@ const AuthPage = () => {
   };
 
   const handleAuthWithGoogle = () => {
-    setIsSocialLogin(true);
     authWithGoogle();
   };
 
   useEffect(() => {
-    if (isSocialLogin && user) {
+    if (user) {
       getData().then(async (res) => {
         if (res) {
           router.push("/");
@@ -67,7 +64,6 @@ const AuthPage = () => {
           await addUserDataToFireStore(user);
           router.push("/onboard");
         }
-        setIsSocialLogin(false);
       });
     }
   }, [user]);
