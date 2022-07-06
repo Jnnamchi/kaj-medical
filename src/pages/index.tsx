@@ -1,10 +1,11 @@
+import Layout from "../components/layout";
 import HomePage from "../containers/HomePage";
 
 export default function Home() {
   return (
-    <div>
+    <Layout>
       <HomePage />
-    </div>
+    </Layout>
   );
 }
 Home.requireAuth = true;

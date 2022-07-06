@@ -7,18 +7,7 @@ import { collection, doc, updateDoc, getDocs } from "firebase/firestore";
 
 import { database } from "../../config/firebase";
 import { useAuth } from "../../context/AuthContext";
-
-const options = [
-  { value: "broker", label: "Business Broker" },
-  { value: "importer", label: "Licensed Distributor/Importer" },
-  { value: "supplier", label: "Manufacturer (Supplier)" },
-  { value: "brokerage", label: "Brokerage Agency" },
-  { value: "government", label: "Government Agency" },
-  { value: "profit", label: "Non Profit Organization" },
-  { value: "facility", label: "Medical Facility" },
-  { value: "collaborator", label: "Business Collaborator" },
-  { value: "other", label: "Other" },
-];
+import { userTypeOptions } from "../../utils/data";
 
 const OnBoardPage = () => {
   const { user } = useAuth();
@@ -99,7 +88,7 @@ const OnBoardPage = () => {
                   <div>
                     <p className="mb-2">What type of entity are you ?</p>
                     <Select
-                      options={options}
+                      options={userTypeOptions}
                       onChange={(selectedOption) =>
                         selectedOption &&
                         formik.setFieldValue("entity", selectedOption.value)
