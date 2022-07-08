@@ -4,11 +4,6 @@ import * as Yup from "yup";
 import { userTypeOptions } from "../../utils/data";
 import FormikControl from "../../components/surveyPage/SurveyFormikControl";
 
-const SurveyPart = ({ fields }: any) =>
-  fields.map((field: any, id: number) => {
-    return <FormikControl {...field} key={id} />;
-  });
-
 const SurveyPage = () => {
   const [step, setStep] = useState(0);
 
@@ -152,8 +147,8 @@ const SurveyPage = () => {
     email: Yup.string().email("Invalid email").required("Email Required"),
     companySite: Yup.string().required("Company Website Required"),
     companyEntity: Yup.string().required("Company or Entity Name Required"),
-    // location: Yup.string().required("Location Required"),
-    // entityType: Yup.string().required("Type of Entity Required"),
+    location: Yup.string().required("Location Required"),
+    entityType: Yup.string().required("Type of Entity Required"),
     requestDescription: Yup.string().required(
       "Description of Request Required"
     ),
@@ -166,8 +161,9 @@ const SurveyPage = () => {
           lastName: "",
           email: "",
           companySite: "",
-          location: "",
           companyEntity: "",
+          location: "",
+          entityType: "",
           requestDescription: "",
         }}
         validationSchema={validationSchema}
@@ -178,15 +174,12 @@ const SurveyPage = () => {
         }}
       >
         {(formik) => {
-          console.log(
-            "🚀 ~ file: index.tsx ~ line 207 ~ SurveyPage ~ formik",
-            formik.values
-          );
-
           return (
             <Form>
               <div className="p-6 py-8 space-y-8">
-                {step === 0 && <SurveyPart fields={fields.inquiry} />}
+                {step === 0 && (
+                  <SurveyPart fields={fields.inquiry} formik={formik} />
+                )}
                 {step === 1 && (
                   <SurveyPart fields={fields.document.brokerageAgency} />
                 )}
@@ -195,12 +188,8 @@ const SurveyPage = () => {
                 <div className="flex">
                   <button
                     type="submit"
-                    disabled={!formik.isValid}
-                    className={`px-4 py-2 m-auto border border-gray-600 rounded ${
-                      formik.isValid
-                        ? ""
-                        : "cursor-not-allowed bg-gray-200 opacity-50"
-                    }`}
+                    // disabled={!formik.isValid}
+                    className={`px-4 py-2 m-auto border border-gray-600 rounded`}
                   >
                     {step === 2 ? "Finish" : "Continue"}
                   </button>
@@ -213,5 +202,9 @@ const SurveyPage = () => {
     </div>
   );
 };
+const SurveyPart = ({ fields, formik }: any) =>
+  fields.map((field: any, id: number) => {
+    return <FormikControl {...field} formik={formik} key={id} />;
+  });
 
 export default SurveyPage;
