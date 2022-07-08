@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
@@ -11,7 +12,6 @@ const HomePage = () => {
   const router = useRouter();
   const databaseRef = collection(database, "User Data");
   const [userData, setUserData] = useState<any>();
-  console.log("🚀 ~ file: index.tsx ~ line 14 ~ HomePage ~ userData", userData);
 
   const getData = async () => {
     const userDB = await getDocs(databaseRef);
@@ -51,9 +51,12 @@ const HomePage = () => {
           )}
         </div>
         <div className="flex justify-center space-x-4 text-sm">
-          <div className="px-6 py-2 text-gray-800 cursor-pointer bg-neutral-200 ">
-            Submit a new inquiry
-          </div>
+          <Link href="/survey">
+            <div className="px-6 py-2 text-gray-800 cursor-pointer bg-neutral-200 ">
+              Submit a new inquiry
+            </div>
+          </Link>
+
           <div className="px-6 py-2 text-gray-800 cursor-pointer bg-neutral-200 ">
             View my inquiries
           </div>
