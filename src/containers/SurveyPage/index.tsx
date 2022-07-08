@@ -64,16 +64,19 @@ const SurveyPage = () => {
           name: "companyRegistration",
           label: "Company Registration",
           control: "input",
+          type: "file",
         },
         {
           name: "licenseRegistration",
           label: "License Registration documents / certifications",
           control: "input",
+          type: "file",
         },
         {
           name: "governmentRegistration",
           label: "Government Registration Forms",
           control: "input",
+          type: "file",
         },
       ],
       manufacturer: [
@@ -81,24 +84,33 @@ const SurveyPage = () => {
           name: "productCatalogue",
           label: "Product Catalogue",
           control: "input",
+          type: "file",
         },
-        { name: "certification", label: "Certification(s)", control: "input" },
+        {
+          name: "certification",
+          label: "Certification(s)",
+          control: "input",
+          type: "file",
+        },
       ],
       brokerageAgency: [
         {
           name: "companyRegistration",
           label: "Company Registration",
           control: "input",
+          type: "file",
         },
         {
           name: "registrationCertifications",
           label: "Registration Certifications",
           control: "input",
+          type: "file",
         },
         {
           name: "VATnumberCode",
           label: "Company VAT number / code",
           control: "input",
+          type: "file",
         },
       ],
       medicalFacility: [
@@ -106,6 +118,7 @@ const SurveyPage = () => {
           name: "companyRegistration",
           label: "Company Registration",
           control: "input",
+          type: "file",
         },
       ],
     },
@@ -141,6 +154,8 @@ const SurveyPage = () => {
     ],
   };
 
+  type ObjectKey = keyof typeof fields.document;
+
   const validationSchema = Yup.object().shape({
     firstName: Yup.string().required("First Name Required"),
     lastName: Yup.string().required("Last Name Required"),
@@ -152,6 +167,7 @@ const SurveyPage = () => {
     requestDescription: Yup.string().required(
       "Description of Request Required"
     ),
+    // birth: Yup.string().required("Date of Birth Required"),
   });
   return (
     <div className="max-w-2xl mx-auto ">
@@ -181,15 +197,19 @@ const SurveyPage = () => {
                   <SurveyPart fields={fields.inquiry} formik={formik} />
                 )}
                 {step === 1 && (
-                  <SurveyPart fields={fields.document.brokerageAgency} />
+                  <SurveyPart
+                    fields={
+                      fields.document[formik.values.entityType as ObjectKey]
+                    }
+                    formik={formik}
+                  />
                 )}
                 {step === 2 && <SurveyPart fields={fields.ekyc} />}
 
                 <div className="flex">
                   <button
                     type="submit"
-                    // disabled={!formik.isValid}
-                    className={`px-4 py-2 m-auto border border-gray-600 rounded`}
+                    className="px-4 py-2 m-auto border border-gray-600 rounded"
                   >
                     {step === 2 ? "Finish" : "Continue"}
                   </button>
@@ -202,9 +222,12 @@ const SurveyPage = () => {
     </div>
   );
 };
-const SurveyPart = ({ fields, formik }: any) =>
-  fields.map((field: any, id: number) => {
-    return <FormikControl {...field} formik={formik} key={id} />;
-  });
+const SurveyPart = ({ fields, formik }: any) => {
+  if (fields) {
+    return fields.map((field: any, id: number) => {
+      return <FormikControl {...field} formik={formik} key={id} />;
+    });
+  }
+};
 
 export default SurveyPage;
