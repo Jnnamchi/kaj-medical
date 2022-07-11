@@ -20,10 +20,8 @@ export default function App(props: AppProps) {
           <Component {...pageProps} />
         </ProtectedRoute>
       ) : (
-        // public page
         <Component {...pageProps} />
       )}
-      {/* <Component {...pageProps} /> */}
     </AuthContextProvider>
   );
 }
