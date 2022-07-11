@@ -1,3 +1,4 @@
+import countryList from "react-select-country-list";
 export const userTypeOptions = [
   { value: "businessBroker", label: "Business Broker" },
   { value: "licensed", label: "Licensed Distributor/Importer" },
@@ -72,7 +73,7 @@ export const surveyFields = {
       name: "location",
       label: "Location Registered",
       control: "select",
-      options: userTypeOptions,
+      options: countryList().getData(),
     },
 
     {
