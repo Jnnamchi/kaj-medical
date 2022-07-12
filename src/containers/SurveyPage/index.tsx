@@ -17,6 +17,7 @@ const SurveyPage = () => {
     entityType: "",
     requestDescription: "",
   });
+
   type ObjectKey = keyof typeof documentInitValues;
 
   useEffect(() => {
@@ -182,15 +183,8 @@ const DocumentStep = (props: DocumentStepInterface) => {
     props.next(values);
   };
   type ObjectKey = keyof typeof surveyFields.document;
-  console.log(
-    "🚀 ~ file: index.tsx ~ line 189 ~ DocumentStep ~ props.data",
-    props.data
-  );
+
   const schema = documentSchema[props.data.entityType as ObjectKey];
-  console.log(
-    "🚀 ~ file: index.tsx ~ line 190 ~ DocumentStep ~ schema",
-    schema
-  );
 
   return (
     <Formik

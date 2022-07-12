@@ -185,7 +185,7 @@ export const surveyFields = {
 };
 
 export const documentInitValues = {
-  inquiry: {
+  licensed: {
     companyRegistration: "",
     licenseRegistration: "",
     governmentRegistration: "",
