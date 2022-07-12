@@ -183,3 +183,23 @@ export const surveyFields = {
     },
   ],
 };
+
+export const documentInitValues = {
+  inquiry: {
+    companyRegistration: "",
+    licenseRegistration: "",
+    governmentRegistration: "",
+  },
+  manufacturer: {
+    productCatalogue: "",
+    certification: "",
+  },
+  brokerageAgency: {
+    companyRegistration: "",
+    registrationCertifications: "",
+    VATnumberCode: "",
+  },
+  medicalFacility: {
+    companyRegistration: "",
+  },
+};
