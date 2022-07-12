@@ -1,32 +1,44 @@
 import { useState } from "react";
 import { Form, Formik } from "formik";
-import * as Yup from "yup";
+import { inquirySchema } from "./schema";
 import { surveyFields } from "../../utils/data";
+import { InquiryStepInterface } from "./interface";
 import FormikControl from "../../components/surveyPage/SurveyFormikControl";
-import { useRouter } from "next/router";
 
 const SurveyPage = () => {
-  const [step, setStep] = useState(0);
+  const [currentStep, setCurrentStep] = useState(0);
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    companySite: "",
+    companyEntity: "",
+    location: "",
+    entityType: "",
+    requestDescription: "",
+  });
 
   type ObjectKey = keyof typeof surveyFields.document;
 
-  const validationSchema = Yup.object().shape({
-    firstName: Yup.string().required("First Name Required"),
-    lastName: Yup.string().required("Last Name Required"),
-    email: Yup.string().email("Invalid email").required("Email Required"),
-    companySite: Yup.string().required("Company Website Required"),
-    companyEntity: Yup.string().required("Company or Entity Name Required"),
-    location: Yup.string().required("Location Required"),
-    entityType: Yup.string().required("Type of Entity Required"),
-    requestDescription: Yup.string().required(
-      "Description of Request Required"
-    ),
-    // birth: Yup.string().required("Date of Birth Required"),
-  });
-  const router = useRouter();
+  const makeRequest = (formData: any) => {};
+
+  const handleNextStep = (newData: any, final = false) => {
+    setFormData((prev) => ({ ...prev, ...newData }));
+    if (final) {
+      makeRequest(newData);
+      return;
+    }
+  };
+
+  const surveySteps = [
+    <InquiryStep next={handleNextStep} data={formData} />,
+    //  <DocumentStep />, <EkycStep />
+  ];
+
   return (
     <div className="max-w-2xl p-4 mx-auto ">
-      <p className="text-xl text-center">
+      {surveySteps[currentStep]}
+      {/* <p className="text-xl text-center">
         {step === 0
           ? "Step 1: Inquiry form"
           : step === 1
@@ -34,17 +46,8 @@ const SurveyPage = () => {
           : "Step 3: eKYC"}
       </p>
       <Formik
-        initialValues={{
-          firstName: "",
-          lastName: "",
-          email: "",
-          companySite: "",
-          companyEntity: "",
-          location: "",
-          entityType: "",
-          requestDescription: "",
-        }}
-        validationSchema={validationSchema}
+        initialValues={{}}
+        validationSchema={inquirySchema}
         onSubmit={() => {
           if (step === 3) {
             router.push("/");
@@ -99,16 +102,33 @@ const SurveyPage = () => {
             </Form>
           );
         }}
-      </Formik>
+      </Formik> */}
     </div>
   );
 };
+
 const SurveyPart = ({ fields, formik }: any) => {
   if (fields) {
     return fields.map((field: any, id: number) => {
       return <FormikControl {...field} formik={formik} key={id} />;
     });
   }
+};
+
+const InquiryStep = (props: InquiryStepInterface) => {
+  const handleSubmit = (values: any) => {
+    props.next(values);
+  };
+
+  return (
+    <Formik
+      validationSchema={inquirySchema}
+      initialValues={props.data}
+      onSubmit={handleSubmit}
+    >
+      {(formik) => <SurveyPart fields={surveyFields.inquiry} formik={formik} />}
+    </Formik>
+  );
 };
 
 export default SurveyPage;
