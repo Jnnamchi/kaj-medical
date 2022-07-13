@@ -180,26 +180,27 @@ export const surveyFields = {
       name: "passport",
       label: "Passport or ID Copy",
       control: "input",
+      type: "file",
     },
   ],
 };
 
 export const documentInitValues = {
   licensed: {
-    companyRegistration: "",
-    licenseRegistration: "",
-    governmentRegistration: "",
+    companyRegistration: null,
+    licenseRegistration: null,
+    governmentRegistration: null,
   },
   manufacturer: {
-    productCatalogue: "",
-    certification: "",
+    productCatalogue: null,
+    certification: null,
   },
   brokerageAgency: {
-    companyRegistration: "",
-    registrationCertifications: "",
-    VATnumberCode: "",
+    companyRegistration: null,
+    registrationCertifications: null,
+    VATnumberCode: null,
   },
   medicalFacility: {
-    companyRegistration: "",
+    companyRegistration: null,
   },
 };

@@ -8,3 +8,9 @@ export interface DocumentStepInterface {
   prev: Function;
   data: any;
 }
+
+export interface EkycStepInterface {
+  next: Function;
+  prev: Function;
+  data: any;
+}

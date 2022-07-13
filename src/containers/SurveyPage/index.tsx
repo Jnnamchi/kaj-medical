@@ -1,9 +1,17 @@
 import { useEffect, useState } from "react";
 import { Form, Formik } from "formik";
-import { documentSchema, inquirySchema } from "./schema";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { v4 } from "uuid";
+
+import { documentSchema, ekycSchema, inquirySchema } from "./schema";
 import { documentInitValues, surveyFields } from "../../utils/data";
 import FormikControl from "../../components/surveyPage/SurveyFormikControl";
-import { DocumentStepInterface, InquiryStepInterface } from "./interface";
+import {
+  DocumentStepInterface,
+  EkycStepInterface,
+  InquiryStepInterface,
+} from "./interface";
+import { storage } from "../../config/firebase";
 
 const SurveyPage = () => {
   const [currentStep, setCurrentStep] = useState(0);
@@ -16,10 +24,26 @@ const SurveyPage = () => {
     location: "",
     entityType: "",
     requestDescription: "",
+    birth: "",
+    governmentId: "",
+    passport: "",
   });
 
   type ObjectKey = keyof typeof documentInitValues;
 
+  const uploadFile = async (imageUpload: File) => {
+    if (imageUpload == null) return;
+    const imageRef = ref(storage, `images/${imageUpload.name + v4()}`);
+    uploadBytes(imageRef, imageUpload).then((snapshot) => {
+      getDownloadURL(snapshot.ref).then((url) => {
+        console.log(
+          "🚀 ~ file: index.tsx ~ line 39 ~ getDownloadURL ~ url",
+          url
+        );
+        return url;
+      });
+    });
+  };
   useEffect(() => {
     if (documentInitValues[formData.entityType as ObjectKey]) {
       setFormData((prev) => ({
@@ -29,8 +53,12 @@ const SurveyPage = () => {
     }
   }, [formData.entityType]);
 
-  const makeRequest = (formData: any) => {
+  const makeRequest = async (formData: any) => {
     console.log(" ~ formData", formData);
+    if (formData["passport"]) {
+      const url = await uploadFile(formData["passport"]);
+      console.log("🚀 ~ file: index.tsx ~ line 56 ~ makeRequest ~ url", url);
+    }
   };
 
   const handleNextStep = (newData: any, final = false) => {
@@ -54,7 +82,7 @@ const SurveyPage = () => {
       prev={handlePrevStep}
       data={formData}
     />,
-    // <EkycStep />
+    <EkycStep next={handleNextStep} prev={handlePrevStep} data={formData} />,
   ];
 
   return (
@@ -67,71 +95,6 @@ const SurveyPage = () => {
           : "Step 3: eKYC"}
       </p>
       {surveySteps[currentStep]}
-      {/* <p className="text-xl text-center">
-        {step === 0
-          ? "Step 1: Inquiry form"
-          : step === 1
-          ? "Step 2: Company Verification"
-          : "Step 3: eKYC"}
-      </p>
-      <Formik
-        initialValues={{}}
-        validationSchema={inquirySchema}
-        onSubmit={() => {
-          if (step === 3) {
-            router.push("/");
-          } else {
-            setStep(step + 1);
-          }
-        }}
-      >
-        {(formik) => {
-          return (
-            <Form>
-              <div className="p-6 py-8 space-y-8">
-                {step === 0 && (
-                  <SurveyPart fields={surveyFields.inquiry} formik={formik} />
-                )}
-                {step === 1 && (
-                  <SurveyPart
-                    fields={
-                      surveyFields.document[
-                        formik.values.entityType as ObjectKey
-                      ]
-                    }
-                    formik={formik}
-                  />
-                )}
-                {step === 2 && <SurveyPart fields={surveyFields.ekyc} />}
-                {step === 3 && <div>You are all set !</div>}
-
-                <div className="flex justify-center space-x-4">
-                  {step > 0 && (
-                    <button
-                      type="button"
-                      onClick={() => setStep(step - 1)}
-                      className="px-4 py-2 border border-gray-600 rounded"
-                    >
-                      Go Back
-                    </button>
-                  )}
-
-                  <button
-                    type="submit"
-                    className="px-4 py-2 border border-gray-600 rounded"
-                  >
-                    {step === 0 || step === 1
-                      ? "Continue"
-                      : step === 2
-                      ? "Finish"
-                      : "Go To Home Page"}
-                  </button>
-                </div>
-              </div>
-            </Form>
-          );
-        }}
-      </Formik> */}
     </div>
   );
 };
@@ -146,10 +109,6 @@ const SurveyPart = ({ fields, formik }: any) => {
 
 const InquiryStep = (props: InquiryStepInterface) => {
   const handleSubmit = (values: any) => {
-    console.log(
-      "🚀 ~ file: index.tsx ~ line 129 ~ handleSubmit ~ values",
-      values
-    );
     props.next(values);
   };
 
@@ -217,6 +176,46 @@ const DocumentStep = (props: DocumentStepInterface) => {
                 className="px-4 py-2 border border-gray-600 rounded"
               >
                 Continue
+              </button>
+            </div>
+          </div>
+        </Form>
+      )}
+    </Formik>
+  );
+};
+
+const EkycStep = (props: EkycStepInterface) => {
+  const handleSubmit = (values: any) => {
+    props.next(values, true);
+  };
+
+  return (
+    <Formik
+      validationSchema={ekycSchema}
+      initialValues={props.data}
+      onSubmit={handleSubmit}
+      enableReinitialize
+    >
+      {(formik) => (
+        <Form>
+          <div className="py-8 space-y-4">
+            <SurveyPart fields={surveyFields.ekyc} formik={formik} />
+
+            <div className="flex justify-center space-x-4">
+              <button
+                className="px-4 py-2 border border-gray-600 rounded"
+                type="button"
+                onClick={() => props.prev(formik.values)}
+              >
+                Back
+              </button>
+
+              <button
+                type="submit"
+                className="px-4 py-2 border border-gray-600 rounded"
+              >
+                Finish
               </button>
             </div>
           </div>
