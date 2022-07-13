@@ -94,9 +94,9 @@ const SurveyPage = () => {
         "passport",
       ].map(async (file) => {
         formData[file] = await uploadFile(formData[file]);
-        saveToDB(formData);
       })
     );
+    saveToDB(formData);
 
     console.log("🚀 ~ file: index.tsx ~ line 65 ~ ].map ~ formData", formData);
   };
