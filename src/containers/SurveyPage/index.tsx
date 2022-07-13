@@ -2,18 +2,55 @@ import { useEffect, useState } from "react";
 import { Form, Formik } from "formik";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { v4 } from "uuid";
-
-import { documentSchema, ekycSchema, inquirySchema } from "./schema";
-import { documentInitValues, surveyFields } from "../../utils/data";
-import FormikControl from "../../components/surveyPage/SurveyFormikControl";
 import {
   DocumentStepInterface,
   EkycStepInterface,
   InquiryStepInterface,
 } from "./interface";
-import { storage } from "../../config/firebase";
+import {
+  documentInitValues,
+  matchedDocumentFiles,
+  surveyFields,
+} from "../../utils/data";
+import { database, storage } from "../../config/firebase";
+import { documentSchema, ekycSchema, inquirySchema } from "./schema";
+import FormikControl from "../../components/surveyPage/SurveyFormikControl";
+import { collection, doc, updateDoc, getDocs } from "firebase/firestore";
+import { useAuth } from "../../context/AuthContext";
 
 const SurveyPage = () => {
+  const { user } = useAuth();
+  const databaseRef = collection(database, "User Data");
+  const [userData, setUserData] = useState<any>();
+  console.log(
+    "🚀 ~ file: index.tsx ~ line 25 ~ SurveyPage ~ userData",
+    userData
+  );
+
+  const saveToDB = async (formData: any) => {
+    if (userData) {
+      updateDoc(doc(databaseRef, userData.docId), {
+        survey_data: formData,
+      }).then(() => {});
+    }
+  };
+
+  const getData = async () => {
+    const userDB = await getDocs(databaseRef);
+    const users: any = userDB.docs.map((doc) => ({
+      ...doc.data(),
+      docId: doc.id,
+    }));
+    const self = users.find((data: any) => data.email === user.email);
+    if (self) {
+      setUserData(self);
+    }
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
+
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState({
     firstName: "",
@@ -34,16 +71,11 @@ const SurveyPage = () => {
   const uploadFile = async (imageUpload: File) => {
     if (imageUpload == null) return;
     const imageRef = ref(storage, `images/${imageUpload.name + v4()}`);
-    uploadBytes(imageRef, imageUpload).then((snapshot) => {
-      getDownloadURL(snapshot.ref).then((url) => {
-        console.log(
-          "🚀 ~ file: index.tsx ~ line 39 ~ getDownloadURL ~ url",
-          url
-        );
-        return url;
-      });
-    });
+    const snapshot = await uploadBytes(imageRef, imageUpload);
+    const url = await getDownloadURL(snapshot.ref);
+    return url;
   };
+
   useEffect(() => {
     if (documentInitValues[formData.entityType as ObjectKey]) {
       setFormData((prev) => ({
@@ -55,10 +87,18 @@ const SurveyPage = () => {
 
   const makeRequest = async (formData: any) => {
     console.log(" ~ formData", formData);
-    if (formData["passport"]) {
-      const url = await uploadFile(formData["passport"]);
-      console.log("🚀 ~ file: index.tsx ~ line 56 ~ makeRequest ~ url", url);
-    }
+    type FileObjectKey = keyof typeof matchedDocumentFiles;
+    await Promise.all(
+      [
+        ...matchedDocumentFiles[formData.entityType as FileObjectKey],
+        "passport",
+      ].map(async (file) => {
+        formData[file] = await uploadFile(formData[file]);
+        saveToDB(formData);
+      })
+    );
+
+    console.log("🚀 ~ file: index.tsx ~ line 65 ~ ].map ~ formData", formData);
   };
 
   const handleNextStep = (newData: any, final = false) => {

@@ -204,3 +204,18 @@ export const documentInitValues = {
     companyRegistration: null,
   },
 };
+
+export const matchedDocumentFiles = {
+  licensed: [
+    "companyRegistration",
+    "licenseRegistration",
+    "governmentRegistration",
+  ],
+  manufacturer: ["productCatalogue", "certification"],
+  brokerageAgency: [
+    "companyRegistration",
+    "registrationCertifications",
+    "VATnumberCode",
+  ],
+  medicalFacility: ["companyRegistration"],
+};
