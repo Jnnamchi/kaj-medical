@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { Form, Formik } from "formik";
+import { useRouter } from "next/router";
+
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { v4 } from "uuid";
 import {
@@ -20,6 +22,7 @@ import { useAuth } from "../../context/AuthContext";
 
 const SurveyPage = () => {
   const { user } = useAuth();
+  const router = useRouter();
   const databaseRef = collection(database, "User Data");
   const [userData, setUserData] = useState<any>();
   console.log(
@@ -52,6 +55,10 @@ const SurveyPage = () => {
   }, []);
 
   const [currentStep, setCurrentStep] = useState(0);
+  console.log(
+    "🚀 ~ file: index.tsx ~ line 55 ~ }).then ~ currentStep",
+    currentStep
+  );
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -90,10 +97,11 @@ const SurveyPage = () => {
     type FileObjectKey = keyof typeof matchedDocumentFiles;
     await Promise.all(
       [
-        ...matchedDocumentFiles[formData.entityType as FileObjectKey],
+        ...(matchedDocumentFiles[formData.entityType as FileObjectKey] || []),
         "passport",
       ].map(async (file) => {
         formData[file] = await uploadFile(formData[file]);
+        setCurrentStep((prev) => prev + 1);
       })
     );
     saveToDB(formData);
@@ -132,9 +140,21 @@ const SurveyPage = () => {
           ? "Step 1: Inquiry form"
           : currentStep === 1
           ? "Step 2: Company Verification"
-          : "Step 3: eKYC"}
+          : currentStep === 2
+          ? "Step 3: eKYC"
+          : "You are all set !"}
       </p>
       {surveySteps[currentStep]}
+      {currentStep === 3 && (
+        <div className="flex justify-center mt-4">
+          <button
+            onClick={() => router.push("/")}
+            className="px-4 py-2 border border-gray-600 rounded"
+          >
+            Go To Home
+          </button>
+        </div>
+      )}
     </div>
   );
 };
