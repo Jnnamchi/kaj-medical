@@ -4,6 +4,11 @@ import { AppProps } from "next/app";
 import { AuthContextProvider } from "../context/AuthContext";
 import ProtectedRoute from "../components/authPage/ProtectedRoute";
 import "../styles/globals.css";
+
+import initAuth from "../utils/initAuth";
+
+initAuth();
+
 export type NextApplicationPage<P = any, IP = P> = NextPage<P, IP> & {
   requireAuth?: boolean;
 };
