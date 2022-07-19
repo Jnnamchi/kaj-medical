@@ -145,7 +145,7 @@ const SurveyPage = () => {
           : "You are all set !"}
       </p>
       {surveySteps[currentStep]}
-      {currentStep === 3 && (
+      {![0, 1, 2].includes(currentStep) && (
         <div className="flex justify-center mt-4">
           <button
             onClick={() => router.push("/")}
