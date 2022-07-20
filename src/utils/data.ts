@@ -140,7 +140,6 @@ export const surveyFields = {
         name: "VATnumberCode",
         label: "Company VAT number / code",
         control: "input",
-        type: "file",
       },
     ],
     medicalFacility: [
@@ -174,6 +173,7 @@ export const surveyFields = {
       name: "governmentId",
       label: "Unique ID Number (Government ID or Passport Number)",
       control: "input",
+      type: "file",
     },
 
     {
@@ -198,7 +198,7 @@ export const documentInitValues = {
   brokerageAgency: {
     companyRegistration: null,
     registrationCertifications: null,
-    VATnumberCode: null,
+    VATnumberCode: "",
   },
   medicalFacility: {
     companyRegistration: null,

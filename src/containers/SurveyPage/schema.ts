@@ -33,7 +33,7 @@ export const documentSchema = {
   brokerageAgency: Yup.object().shape({
     companyRegistration: Yup.mixed().required("A file is required"),
     registrationCertifications: Yup.mixed().required("A file is required"),
-    VATnumberCode: Yup.mixed().required("A file is required"),
+    VATnumberCode: Yup.string().required("VAT Number Code Required"),
   }),
   medicalFacility: Yup.object().shape({
     companyRegistration: Yup.mixed().required("A file is required"),
@@ -44,6 +44,6 @@ export const ekycSchema = Yup.object().shape({
   firstName: Yup.string().required("First Name Required"),
   lastName: Yup.string().required("Last Name Required"),
   birth: Yup.date().required("Birth Required"),
-  governmentId: Yup.string().required("Government ID Required"),
+  governmentId: Yup.mixed().required("A file is required"),
   passport: Yup.mixed().required("A file is required"),
 });

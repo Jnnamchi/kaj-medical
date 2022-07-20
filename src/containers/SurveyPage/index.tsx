@@ -93,20 +93,22 @@ const SurveyPage = () => {
   }, [formData.entityType]);
 
   const makeRequest = async (formData: any) => {
-    console.log(" ~ formData", formData);
     type FileObjectKey = keyof typeof matchedDocumentFiles;
     await Promise.all(
       [
         ...(matchedDocumentFiles[formData.entityType as FileObjectKey] || []),
         "passport",
+        "governmentId",
       ].map(async (file) => {
-        formData[file] = await uploadFile(formData[file]);
-        setCurrentStep((prev) => prev + 1);
+        if (file !== "VATnumberCode") {
+          formData[file] = await uploadFile(formData[file]);
+        } else {
+          formData[file] = formData[file];
+        }
       })
     );
     saveToDB(formData);
-
-    console.log("🚀 ~ file: index.tsx ~ line 65 ~ ].map ~ formData", formData);
+    setCurrentStep((prev) => prev + 1);
   };
 
   const handleNextStep = (newData: any, final = false) => {
