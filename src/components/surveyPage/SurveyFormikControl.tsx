@@ -5,7 +5,7 @@ import Textarea from "../common/Textarea";
 const ControlWrapper = ({ label, children }: any) => {
   return (
     <div className="flex items-start space-x-4 ">
-      <div className="flex justify-end w-1/3">
+      <div className="flex justify-end w-1/4">
         <span className="whitespace-nowrap">{label}</span>
       </div>
       <div className="w-2/3 ">{children}</div>

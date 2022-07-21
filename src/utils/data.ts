@@ -140,7 +140,6 @@ export const surveyFields = {
         name: "VATnumberCode",
         label: "Company VAT number / code",
         control: "input",
-        type: "file",
       },
     ],
     medicalFacility: [
@@ -174,12 +173,49 @@ export const surveyFields = {
       name: "governmentId",
       label: "Unique ID Number (Government ID or Passport Number)",
       control: "input",
+      type: "file",
     },
 
     {
       name: "passport",
       label: "Passport or ID Copy",
       control: "input",
+      type: "file",
     },
   ],
+};
+
+export const documentInitValues = {
+  licensed: {
+    companyRegistration: null,
+    licenseRegistration: null,
+    governmentRegistration: null,
+  },
+  manufacturer: {
+    productCatalogue: null,
+    certification: null,
+  },
+  brokerageAgency: {
+    companyRegistration: null,
+    registrationCertifications: null,
+    VATnumberCode: "",
+  },
+  medicalFacility: {
+    companyRegistration: null,
+  },
+};
+
+export const matchedDocumentFiles = {
+  licensed: [
+    "companyRegistration",
+    "licenseRegistration",
+    "governmentRegistration",
+  ],
+  manufacturer: ["productCatalogue", "certification"],
+  brokerageAgency: [
+    "companyRegistration",
+    "registrationCertifications",
+    "VATnumberCode",
+  ],
+  medicalFacility: ["companyRegistration"],
 };
