@@ -1,38 +1,33 @@
 import * as Yup from 'yup';
 import { useRouter } from 'next/router';
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { Formik, Form, Field } from 'formik';
-import { useAuthUser } from 'next-firebase-auth';
 import { useAuth } from '../../context/AuthContext';
 import getAbsoluteURL from '../../utils/getAbsoluteURL';
 
 const AuthPage = () => {
-  const AuthUser = useAuthUser(); // the user is guaranteed to be authenticated
   const router = useRouter();
 
   const [showRegisterForm, setShowRegisterForm] = useState(false);
   const { login, signup, authWithGoogle } = useAuth();
 
-  const addUserDataToFireStore = useCallback(
-    async (user: { uid: string; email: string; user_name?: string }) => {
-      const endpoint = getAbsoluteURL('/api/user');
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        body: JSON.stringify({
-          id: user.uid,
-          email: user.email,
-          user_name: user.user_name || '',
-        }),
-      });
-      const data = await response.json();
-      if (!response.ok) {
-        console.error(`Data fetching failed with status ${response.status}: ${JSON.stringify(data)}`);
-        return null;
-      }
-      return data;
-    },
-    [AuthUser],
-  );
+  const addUserDataToFireStore = async (user: { uid: string; email: string; user_name?: string }) => {
+    const endpoint = getAbsoluteURL('/api/user');
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      body: JSON.stringify({
+        id: user.uid,
+        email: user.email,
+        user_name: user.user_name || '',
+      }),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      console.error(`Data fetching failed with status ${response.status}: ${JSON.stringify(data)}`);
+      return null;
+    }
+    return data;
+  };
   const handleSubmit = async (values: { email: string; password: string }) => {
     try {
       if (showRegisterForm) {

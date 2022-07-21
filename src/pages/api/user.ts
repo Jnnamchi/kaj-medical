@@ -1,33 +1,15 @@
 import { verifyIdToken } from 'next-firebase-auth';
-import { collection, addDoc, getDocs } from 'firebase/firestore';
 import initAuth from '../../utils/initAuth';
 import { database } from '../../config/firebase';
+import { collection, doc, updateDoc, getDocs, addDoc } from 'firebase/firestore';
 
 initAuth();
 
 export default async (req: any, res: any) => {
   const databaseRef = collection(database, 'User Data');
   if (req.method === 'GET') {
-    if (!(req.headers && req.headers.authorization)) {
-      return res.status(400).json({ error: 'Missing Authorization header value' });
-    }
-    const token = req.headers.authorization;
-
-    let response: any;
-
-    if (token === 'unauthenticated') {
-      response = 'unknown, because you called the API without an ID token';
-    } else {
-      try {
-        await verifyIdToken(token);
-      } catch (e) {
-        return res.status(403).json({ error: 'Not authorized' });
-      }
-    }
-
     const userDB = await getDocs(databaseRef);
-
-    response = userDB.docs.map(doc => ({
+    const response = userDB.docs.map(doc => ({
       ...doc.data(),
       docId: doc.id,
     }));
@@ -42,6 +24,44 @@ export default async (req: any, res: any) => {
       return res.status(200).json(savingData);
     } catch (err) {
       return res.status(500).json({ err });
+    }
+  } else if (req.method === 'PUT') {
+    if (!(req.headers && req.headers.authorization)) {
+      return res.status(400).json({ error: 'Missing Authorization header value' });
+    }
+    const token = req.headers.authorization;
+
+    if (token === 'unauthenticated') {
+      return res.status(400).json({ error: 'unknown, because you called the API without an ID token' });
+    } else {
+      try {
+        const authUser = await verifyIdToken(token);
+        if (!authUser.id) {
+          return res.status(403).json({ error: 'Not authorized' });
+        }
+        const { fullName, entity } = JSON.parse(req.body);
+
+        const userDB = await getDocs(databaseRef);
+        const users = userDB.docs.map(doc => ({
+          ...doc.data(),
+          docId: doc.id,
+        }));
+        const self = users.find((data: any) => data.id === authUser.id);
+        try {
+          if (self) {
+            await updateDoc(doc(databaseRef, self.docId), {
+              user_name: fullName,
+              user_type: entity,
+            });
+          }
+        } catch (err) {
+          return res.status(403).json({ error: 'Update data failed' });
+        }
+
+        return res.status(200).json({ fullName, entity });
+      } catch (e) {
+        return res.status(403).json({ error: 'Not authorized' });
+      }
     }
   }
 };
