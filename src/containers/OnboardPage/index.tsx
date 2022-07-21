@@ -10,19 +10,15 @@ import { userTypeOptions } from '../../utils/data';
 const OnBoardPage = () => {
   const { user } = useAuth();
   const router = useRouter();
-  const AuthUser = useAuthUser(); // the user is guaranteed to be authenticated
+  const authUser = useAuthUser();
 
   const saveOnboardData = async (payload: { fullName: string; entity: string }) => {
-    const token = await AuthUser.getIdToken();
-    if (!token) {
-      console.error(`Data fetching failed with status no token`);
-      return;
-    }
+    const token = await authUser.getIdToken();
 
     const response = await fetch('/api/user', {
       method: 'PUT',
       headers: {
-        Authorization: token,
+        Authorization: token || 'unauthenticated',
       },
       body: JSON.stringify({
         fullName: payload.fullName,
@@ -95,6 +91,5 @@ const OnBoardPage = () => {
   );
 };
 export default withAuthUser({
-  whenUnauthedBeforeInit: AuthAction.SHOW_LOADER,
   whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,
 })(OnBoardPage);
