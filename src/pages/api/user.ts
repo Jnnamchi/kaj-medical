@@ -25,12 +25,12 @@ export default async (req: any, res: any) => {
       }));
       const self = users.find((data: any) => data.email === authUser.email);
 
-      return res.status(200).json({ users });
+      return res.status(200).json({ self });
     }
   } else if (req.method === 'POST') {
-    const { id, email, user_name } = JSON.parse(req.body);
+    const { id, email, user_name, user_type } = JSON.parse(req.body);
 
-    const savingData = { id, email, user_name };
+    const savingData = { id, email, user_name, user_type };
     try {
       await addDoc(databaseRef, savingData);
       return res.status(200).json(savingData);

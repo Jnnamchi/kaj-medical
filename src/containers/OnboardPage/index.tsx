@@ -14,6 +14,26 @@ const OnBoardPage = () => {
 
   const saveOnboardData = async (payload: { fullName: string; entity: string }) => {
     const token = await authUser.getIdToken();
+    if (authUser.clientInitialized) {
+      const response = await fetch('/api/user', {
+        method: 'POST',
+        headers: {
+          Authorization: token || 'unauthenticated',
+        },
+        body: JSON.stringify({
+          user_name: payload.fullName,
+          user_type: payload.entity,
+          email: authUser.email,
+          id: authUser.id,
+        }),
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        console.error(`Data fetching failed with status ${response.status}: ${JSON.stringify(data)}`);
+        return null;
+      }
+      return data;
+    }
 
     const response = await fetch('/api/user', {
       method: 'PUT',
@@ -21,8 +41,8 @@ const OnBoardPage = () => {
         Authorization: token || 'unauthenticated',
       },
       body: JSON.stringify({
-        fullName: payload.fullName,
-        entity: payload.entity,
+        user_name: payload.fullName,
+        user_type: payload.entity,
       }),
     });
     const data = await response.json();
