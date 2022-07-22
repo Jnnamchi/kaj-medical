@@ -1,8 +1,9 @@
-import { useAuth } from "../../context/AuthContext";
+import { useAuthUser, withAuthUser } from 'next-firebase-auth';
 
 const Header = () => {
-  const { logout } = useAuth();
+  const authUser = useAuthUser();
 
+  const logout = authUser.signOut;
   return (
     <div className="w-full p-4 px-12 bg-no-repeat bg-cover bg-header">
       <div className="flex justify-end text-white ">
@@ -13,4 +14,4 @@ const Header = () => {
     </div>
   );
 };
-export default Header;
+export default withAuthUser({})(Header);
