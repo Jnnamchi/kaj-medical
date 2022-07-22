@@ -8,13 +8,25 @@ initAuth();
 export default async (req: any, res: any) => {
   const databaseRef = collection(database, 'userData');
   if (req.method === 'GET') {
-    const userDB = await getDocs(databaseRef);
-    const response = userDB.docs.map(doc => ({
-      ...doc.data(),
-      docId: doc.id,
-    }));
+    const token = req.headers.authorization;
 
-    return res.status(200).json({ response });
+    if (token === 'unauthenticated') {
+      return res.status(400).json({ error: 'unknown, because you called the API without an ID token' });
+    } else {
+      const authUser = await verifyIdToken(token);
+      if (!authUser.id) {
+        return res.status(403).json({ error: 'Not authorized' });
+      }
+
+      const userDB = await getDocs(databaseRef);
+      const users = userDB.docs.map(doc => ({
+        ...doc.data(),
+        docId: doc.id,
+      }));
+      const self = users.find((data: any) => data.email === authUser.email);
+
+      return res.status(200).json({ users });
+    }
   } else if (req.method === 'POST') {
     const { id, email, user_name } = JSON.parse(req.body);
 
@@ -44,7 +56,7 @@ export default async (req: any, res: any) => {
         docId: doc.id,
       }));
 
-      const self = users.find((data: any) => data.id === authUser.id);
+      const self = users.find((data: any) => data.email === authUser.email);
 
       try {
         if (self) {
