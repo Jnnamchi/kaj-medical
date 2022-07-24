@@ -1,11 +1,12 @@
 import * as Yup from 'yup';
-import Select from 'react-select';
 import { useRouter } from 'next/router';
-import { Formik, Form, Field } from 'formik';
+import { Formik, Form } from 'formik';
 import { AuthAction, useAuthUser, withAuthUser } from 'next-firebase-auth';
 
 import { useAuth } from '../../context/AuthContext';
 import { userTypeOptions } from '../../utils/data';
+import Select from '../../components/common/Select';
+import Input from '../../components/common/Input';
 
 const OnBoardPage = () => {
   const { user } = useAuth();
@@ -59,6 +60,7 @@ const OnBoardPage = () => {
 
   const validationSchema = Yup.object().shape({
     fullName: Yup.string().required('Full Name is required').max(50, 'Sorry, name is too long'),
+    entity: Yup.string().required('Entity Type is required'),
   });
 
   return (
@@ -77,24 +79,12 @@ const OnBoardPage = () => {
               <Form className="space-y-6 ">
                 <div>
                   <p className="mb-2">What is your Full Name ?</p>
-                  <Field
-                    type="text"
-                    className="block w-full px-4 py-1 m-0 text-xl font-normal text-gray-700 transition ease-in-out bg-white border border-gray-300 border-solid rounded bg-clip-padding focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                    id="exampleFormControlInput2"
-                    placeholder="Full Name"
-                    name="fullName"
-                  />
-                  {formik.errors.fullName && formik.touched.fullName ? (
-                    <span className="text-sm text-red-500">{formik.errors.fullName}</span>
-                  ) : null}
+                  <Input formik={formik} name="fullName" placeholder="Full Name" type="text" />
                 </div>
 
                 <div>
                   <p className="mb-2">What type of entity are you ?</p>
-                  <Select
-                    options={userTypeOptions}
-                    onChange={selectedOption => selectedOption && formik.setFieldValue('entity', selectedOption.value)}
-                  />
+                  <Select formik={formik} name="entity" options={userTypeOptions} />
                 </div>
 
                 <div className="flex">
