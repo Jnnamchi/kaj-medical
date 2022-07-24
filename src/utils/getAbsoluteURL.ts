@@ -6,9 +6,7 @@ const getAbsoluteURL = (url: string, req: any = null) => {
     host = req.headers.host;
   } else {
     if (typeof window === "undefined") {
-      throw new Error(
-        'The "req" parameter must be provided if on the server side.'
-      );
+      throw new Error('The "req" parameter must be provided if on the server side.');
     }
     host = window.location.host;
   }

@@ -1,8 +1,9 @@
 {
   "tabWidth": 2,
-  "printWidth": 120,
-  "trailingComma": "all",
-  "singleQuote": true,
-  "ignorePath": ".gitignore",
+  "printWidth": 85,
+  "trailingComma": "none",
+  "singleQuote": false,
+  "semi": true,
+  "endOfLine": "auto",
   "arrowParens": "avoid"
 }

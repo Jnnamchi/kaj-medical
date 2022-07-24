@@ -6,11 +6,11 @@ import Layout from "../components/layout";
 
 const styles = {
   content: {
-    padding: 32,
+    padding: 32
   },
   infoTextContainer: {
-    marginBottom: 32,
-  },
+    marginBottom: 32
+  }
 };
 
 const Demo = () => {
@@ -23,8 +23,8 @@ const Demo = () => {
     const response = await fetch(endpoint, {
       method: "GET",
       headers: {
-        Authorization: token ? token : "",
-      },
+        Authorization: token ? token : ""
+      }
     });
     const data = await response.json();
     if (!response.ok) {
@@ -63,10 +63,10 @@ const Demo = () => {
           <div style={styles.infoTextContainer}>
             <h3>Example: static + loader</h3>
             <p>
-              This page requires is static but requires authentication. Before
-              the Firebase client SDK initializes, it shows a loader. After
-              initializing, if the user is not authenticated, it client-side
-              redirects to the login page.
+              This page requires is static but requires authentication. Before the
+              Firebase client SDK initializes, it shows a loader. After initializing,
+              if the user is not authenticated, it client-side redirects to the login
+              page.
             </p>
             <p>Your favorite color is: {favoriteColor}</p>
           </div>
@@ -80,6 +80,6 @@ const Demo = () => {
 
 export default withAuthUser({
   whenUnauthedBeforeInit: AuthAction.SHOW_LOADER,
-  whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,
+  whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN
   // LoaderComponent: FullPageLoader,
 })(Demo);

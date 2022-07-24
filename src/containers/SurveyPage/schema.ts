@@ -17,27 +17,27 @@ export const inquirySchema = Yup.object().shape({
   companyEntity: Yup.string().required("Company or Entity Name Required"),
   location: Yup.string().required("Location Required"),
   entityType: Yup.string().required("Type of Entity Required"),
-  requestDescription: Yup.string().required("Description of Request Required"),
+  requestDescription: Yup.string().required("Description of Request Required")
 });
 
 export const documentSchema = {
   licensed: Yup.object().shape({
     companyRegistration: Yup.mixed().required("A file is required"),
     licenseRegistration: Yup.mixed().required("A file is required"),
-    governmentRegistration: Yup.mixed().required("A file is required"),
+    governmentRegistration: Yup.mixed().required("A file is required")
   }),
   manufacturer: Yup.object().shape({
     productCatalogue: Yup.mixed().required("A file is required"),
-    certification: Yup.mixed().required("A file is required"),
+    certification: Yup.mixed().required("A file is required")
   }),
   brokerageAgency: Yup.object().shape({
     companyRegistration: Yup.mixed().required("A file is required"),
     registrationCertifications: Yup.mixed().required("A file is required"),
-    VATnumberCode: Yup.string().required("VAT Number Code Required"),
+    VATnumberCode: Yup.string().required("VAT Number Code Required")
   }),
   medicalFacility: Yup.object().shape({
-    companyRegistration: Yup.mixed().required("A file is required"),
-  }),
+    companyRegistration: Yup.mixed().required("A file is required")
+  })
 };
 
 export const ekycSchema = Yup.object().shape({
@@ -45,5 +45,5 @@ export const ekycSchema = Yup.object().shape({
   lastName: Yup.string().required("Last Name Required"),
   birth: Yup.date().required("Birth Required"),
   governmentId: Yup.mixed().required("A file is required"),
-  passport: Yup.mixed().required("A file is required"),
+  passport: Yup.mixed().required("A file is required")
 });

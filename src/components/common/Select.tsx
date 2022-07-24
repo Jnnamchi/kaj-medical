@@ -9,9 +9,7 @@ function SelectComponent(props: any) {
     <div>
       <Select
         options={options}
-        value={options.find(
-          (option: any) => option.value === formik.values[name]
-        )}
+        value={options.find((option: any) => option.value === formik.values[name])}
         onChange={(option: { label: string; value: string }) =>
           formik.setFieldValue(name, option.value)
         }

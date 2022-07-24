@@ -1,9 +1,9 @@
-import * as Yup from 'yup';
-import { useRouter } from 'next/router';
-import { useState } from 'react';
-import { Formik, Form, Field } from 'formik';
-import { useAuth } from '../../context/AuthContext';
-import getAbsoluteURL from '../../utils/getAbsoluteURL';
+import * as Yup from "yup";
+import { useRouter } from "next/router";
+import { useState } from "react";
+import { Formik, Form, Field } from "formik";
+import { useAuth } from "../../context/AuthContext";
+import getAbsoluteURL from "../../utils/getAbsoluteURL";
 
 const AuthPage = () => {
   const router = useRouter();
@@ -11,19 +11,27 @@ const AuthPage = () => {
   const [showRegisterForm, setShowRegisterForm] = useState(false);
   const { login, signup, authWithGoogle } = useAuth();
 
-  const addUserDataToFireStore = async (user: { uid: string; email: string; user_name?: string }) => {
-    const endpoint = getAbsoluteURL('/api/user');
+  const addUserDataToFireStore = async (user: {
+    uid: string;
+    email: string;
+    user_name?: string;
+  }) => {
+    const endpoint = getAbsoluteURL("/api/user");
     const response = await fetch(endpoint, {
-      method: 'POST',
+      method: "POST",
       body: JSON.stringify({
         id: user.uid,
         email: user.email,
-        user_name: user.user_name || '',
-      }),
+        user_name: user.user_name || ""
+      })
     });
     const data = await response.json();
     if (!response.ok) {
-      console.error(`Data fetching failed with status ${response.status}: ${JSON.stringify(data)}`);
+      console.error(
+        `Data fetching failed with status ${response.status}: ${JSON.stringify(
+          data
+        )}`
+      );
       return null;
     }
     return data;
@@ -34,7 +42,7 @@ const AuthPage = () => {
         const res = await signup(values.email, values.password);
         if (res.user) {
           await addUserDataToFireStore(res.user);
-          router.push('/onboard');
+          router.push("/onboard");
         }
       } else {
         await login(values.email, values.password);
@@ -62,17 +70,21 @@ const AuthPage = () => {
             </div>
             <div className="mb-12 xl:ml-20 xl:w-5/12 lg:w-5/12 md:w-8/12 md:mb-0">
               <Formik
-                initialValues={{ email: '', password: '' }}
+                initialValues={{ email: "", password: "" }}
                 validationSchema={Yup.object().shape({
-                  email: Yup.string().email('Invalid email').required('Email Required'),
-                  password: Yup.string().required('Password Required'),
+                  email: Yup.string()
+                    .email("Invalid email")
+                    .required("Email Required"),
+                  password: Yup.string().required("Password Required")
                 })}
                 onSubmit={handleSubmit}
               >
                 {({ errors, touched }) => (
                   <Form>
                     <div className="flex flex-row items-center justify-center lg:justify-start">
-                      <p className="mb-0 mr-4 text-lg">{showRegisterForm ? 'Register' : 'Sign in'} with</p>
+                      <p className="mb-0 mr-4 text-lg">
+                        {showRegisterForm ? "Register" : "Sign in"} with
+                      </p>
                       <button
                         onClick={handleAuthWithGoogle}
                         type="button"
@@ -125,7 +137,9 @@ const AuthPage = () => {
                         name="password"
                       />
                       {errors.password && touched.password ? (
-                        <span className="text-sm text-red-500">{errors.password}</span>
+                        <span className="text-sm text-red-500">
+                          {errors.password}
+                        </span>
                       ) : null}
                     </div>
 
@@ -136,7 +150,9 @@ const AuthPage = () => {
                           className="float-left w-4 h-4 mt-1 mr-2 align-top transition duration-200 bg-white bg-center bg-no-repeat bg-contain border border-gray-300 rounded-sm appearance-none cursor-pointer form-check-input checked:bg-blue-600 checked:border-blue-600 focus:outline-none"
                           id="exampleCheck2"
                         />
-                        <label className="inline-block text-gray-800 form-check-label">Remember me</label>
+                        <label className="inline-block text-gray-800 form-check-label">
+                          Remember me
+                        </label>
                       </div>
                       <a href="#!" className="text-gray-800">
                         Forgot password?
@@ -148,15 +164,19 @@ const AuthPage = () => {
                         type="submit"
                         className="inline-block py-3 text-sm font-medium leading-snug text-white uppercase transition duration-150 ease-in-out bg-blue-600 rounded shadow-md px-7 hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg"
                       >
-                        {showRegisterForm ? 'Register' : 'Login'}
+                        {showRegisterForm ? "Register" : "Login"}
                       </button>
                       <p
                         className="pt-1 mt-2 mb-0 text-sm font-semibold"
                         onClick={() => setShowRegisterForm(!showRegisterForm)}
                       >
-                        <span>{showRegisterForm ? 'Already have an account?' : `Don't have an account?`}</span>
+                        <span>
+                          {showRegisterForm
+                            ? "Already have an account?"
+                            : `Don't have an account?`}
+                        </span>
                         <span className="ml-2 text-red-600 transition duration-200 ease-in-out cursor-pointer hover:text-red-700 focus:text-red-700">
-                          {showRegisterForm ? 'Login' : 'Register'}
+                          {showRegisterForm ? "Login" : "Register"}
                         </span>
                       </p>
                     </div>

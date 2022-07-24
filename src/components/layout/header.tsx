@@ -1,4 +1,4 @@
-import { useAuthUser, withAuthUser } from 'next-firebase-auth';
+import { useAuthUser, withAuthUser } from "next-firebase-auth";
 
 const Header = () => {
   const authUser = useAuthUser();

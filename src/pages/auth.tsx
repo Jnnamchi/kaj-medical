@@ -1,5 +1,5 @@
-import { withAuthUser, AuthAction } from 'next-firebase-auth';
-import AuthPage from '../containers/AuthPage';
+import { withAuthUser, AuthAction } from "next-firebase-auth";
+import AuthPage from "../containers/AuthPage";
 
 function Auth() {
   return (
@@ -10,5 +10,5 @@ function Auth() {
 }
 
 export default withAuthUser({
-  whenAuthed: AuthAction.REDIRECT_TO_APP,
+  whenAuthed: AuthAction.REDIRECT_TO_APP
 })(Auth);
