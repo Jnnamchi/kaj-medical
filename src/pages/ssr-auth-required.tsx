@@ -3,18 +3,18 @@ import {
   useAuthUser,
   withAuthUser,
   withAuthUserTokenSSR,
-  AuthAction,
+  AuthAction
 } from "next-firebase-auth";
 // import DemoPageLinks from "../components/DemoPageLinks";
 import getAbsoluteURL from "../utils/getAbsoluteURL";
 
 const styles = {
   content: {
-    padding: 32,
+    padding: 32
   },
   infoTextContainer: {
-    marginBottom: 32,
-  },
+    marginBottom: 32
+  }
 };
 
 const Demo = ({ favoriteColor }: any) => {
@@ -43,7 +43,7 @@ const Demo = ({ favoriteColor }: any) => {
 };
 
 export const getServerSideProps = withAuthUserTokenSSR({
-  whenUnauthed: AuthAction.REDIRECT_TO_LOGIN,
+  whenUnauthed: AuthAction.REDIRECT_TO_LOGIN
 })(async ({ AuthUser, req }) => {
   // Optionally, get other props.
   // You can return anything you'd normally return from
@@ -58,24 +58,22 @@ export const getServerSideProps = withAuthUserTokenSSR({
   const response = await fetch(endpoint, {
     method: "GET",
     headers: {
-      Authorization: token || "unauthenticated",
-    },
+      Authorization: token || "unauthenticated"
+    }
   });
   const data = await response.json();
   if (!response.ok) {
     throw new Error(
-      `Data fetching failed with status ${response.status}: ${JSON.stringify(
-        data
-      )}`
+      `Data fetching failed with status ${response.status}: ${JSON.stringify(data)}`
     );
   }
   return {
     props: {
-      favoriteColor: data.favoriteColor,
-    },
+      favoriteColor: data.favoriteColor
+    }
   };
 });
 
 export default withAuthUser({
-  whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,
+  whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN
 })(Demo);

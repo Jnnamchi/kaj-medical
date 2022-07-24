@@ -8,7 +8,7 @@ export const userTypeOptions = [
   { value: "nonProfit", label: "Non Profit Organization" },
   { value: "medicalFacility", label: "Medical Facility" },
   { value: "businessCollaborator", label: "Business Collaborator" },
-  { value: "other", label: "Other" },
+  { value: "other", label: "Other" }
 ];
 
 export const documentPerEntity = {
@@ -16,25 +16,23 @@ export const documentPerEntity = {
     { value: "companyRegistration", label: "Company Registration" },
     {
       value: "licenseRegistration",
-      label: "License Registration documents / certifications",
+      label: "License Registration documents / certifications"
     },
-    { value: "governmentRegistration", label: "Government Registration Forms" },
+    { value: "governmentRegistration", label: "Government Registration Forms" }
   ],
   manufacturer: [
     { value: "productCatalogue", label: "Product Catalogue" },
-    { value: "certification", label: "Certification(s)" },
+    { value: "certification", label: "Certification(s)" }
   ],
   brokerageAgency: [
     { value: "companyRegistration", label: "Company Registration" },
     {
       value: "registrationCertifications",
-      label: "Registration Certifications",
+      label: "Registration Certifications"
     },
-    { value: "VATnumberCode", label: "Company VAT number / code" },
+    { value: "VATnumberCode", label: "Company VAT number / code" }
   ],
-  medicalFacility: [
-    { value: "companyRegistration", label: "Company Registration" },
-  ],
+  medicalFacility: [{ value: "companyRegistration", label: "Company Registration" }]
 };
 
 export const surveyFields = {
@@ -42,51 +40,51 @@ export const surveyFields = {
     {
       name: "firstName",
       label: "First Name",
-      control: "input",
+      control: "input"
     },
     {
       name: "lastName",
       label: "Last Name",
-      control: "input",
+      control: "input"
     },
 
     {
       name: "email",
       label: "Email (No gmail or major@mails) ",
       control: "input",
-      type: "email",
+      type: "email"
     },
 
     {
       name: "companySite",
       label: "Company Website",
-      control: "input",
+      control: "input"
     },
 
     {
       name: "companyEntity",
       label: "Company or Entity Name",
-      control: "input",
+      control: "input"
     },
 
     {
       name: "location",
       label: "Location Registered",
       control: "select",
-      options: countryList().getData(),
+      options: countryList().getData()
     },
 
     {
       name: "entityType",
       label: "Type of Entity",
       control: "select",
-      options: userTypeOptions,
+      options: userTypeOptions
     },
     {
       name: "requestDescription",
       label: "Description of Request",
-      control: "textarea",
-    },
+      control: "textarea"
+    }
   ],
   document: {
     licensed: [
@@ -94,128 +92,124 @@ export const surveyFields = {
         name: "companyRegistration",
         label: "Company Registration",
         control: "input",
-        type: "file",
+        type: "file"
       },
       {
         name: "licenseRegistration",
         label: "License Registration documents / certifications",
         control: "input",
-        type: "file",
+        type: "file"
       },
       {
         name: "governmentRegistration",
         label: "Government Registration Forms",
         control: "input",
-        type: "file",
-      },
+        type: "file"
+      }
     ],
     manufacturer: [
       {
         name: "productCatalogue",
         label: "Product Catalogue",
         control: "input",
-        type: "file",
+        type: "file"
       },
       {
         name: "certification",
         label: "Certification(s)",
         control: "input",
-        type: "file",
-      },
+        type: "file"
+      }
     ],
     brokerageAgency: [
       {
         name: "companyRegistration",
         label: "Company Registration",
         control: "input",
-        type: "file",
+        type: "file"
       },
       {
         name: "registrationCertifications",
         label: "Registration Certifications",
         control: "input",
-        type: "file",
+        type: "file"
       },
       {
         name: "VATnumberCode",
         label: "Company VAT number / code",
-        control: "input",
-      },
+        control: "input"
+      }
     ],
     medicalFacility: [
       {
         name: "companyRegistration",
         label: "Company Registration",
         control: "input",
-        type: "file",
-      },
-    ],
+        type: "file"
+      }
+    ]
   },
   ekyc: [
     {
       name: "firstName",
       label: "First Name",
-      control: "input",
+      control: "input"
     },
     {
       name: "lastName",
       label: "Last Name",
-      control: "input",
+      control: "input"
     },
     {
       name: "birth",
       label: "Date of Birth",
       control: "input",
-      type: "date",
+      type: "date"
     },
 
     {
       name: "governmentId",
       label: "Unique ID Number (Government ID or Passport Number)",
       control: "input",
-      type: "file",
+      type: "file"
     },
 
     {
       name: "passport",
       label: "Passport or ID Copy",
       control: "input",
-      type: "file",
-    },
-  ],
+      type: "file"
+    }
+  ]
 };
 
 export const documentInitValues = {
   licensed: {
     companyRegistration: null,
     licenseRegistration: null,
-    governmentRegistration: null,
+    governmentRegistration: null
   },
   manufacturer: {
     productCatalogue: null,
-    certification: null,
+    certification: null
   },
   brokerageAgency: {
     companyRegistration: null,
     registrationCertifications: null,
-    VATnumberCode: "",
+    VATnumberCode: ""
   },
   medicalFacility: {
-    companyRegistration: null,
-  },
+    companyRegistration: null
+  }
 };
 
 export const matchedDocumentFiles = {
-  licensed: [
-    "companyRegistration",
-    "licenseRegistration",
-    "governmentRegistration",
-  ],
+  licensed: ["companyRegistration", "licenseRegistration", "governmentRegistration"],
   manufacturer: ["productCatalogue", "certification"],
   brokerageAgency: [
     "companyRegistration",
     "registrationCertifications",
-    "VATnumberCode",
+    "VATnumberCode"
   ],
-  medicalFacility: ["companyRegistration"],
+  medicalFacility: ["companyRegistration"]
 };

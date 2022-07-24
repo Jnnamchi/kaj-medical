@@ -1,5 +1,5 @@
-import Layout from '../components/layout';
-import SurveyPage from '../containers/SurveyPage';
+import Layout from "../components/layout";
+import SurveyPage from "../containers/SurveyPage";
 
 export default function Survey() {
   return (

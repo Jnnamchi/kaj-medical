@@ -1,7 +1,7 @@
-import { AuthAction, useAuthUser, withAuthUser } from 'next-firebase-auth';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { AuthAction, useAuthUser, withAuthUser } from "next-firebase-auth";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 const HomePage = () => {
   const authUser = useAuthUser();
@@ -9,9 +9,9 @@ const HomePage = () => {
 
   useEffect(() => {
     getUserData().then(res => {
-      console.log('🚀 ~ file: index.tsx ~ line 11 ~ saveOnboardData ~ res', res);
+      console.log("🚀 ~ file: index.tsx ~ line 11 ~ saveOnboardData ~ res", res);
       if (res && (!res.self || (res.self && !res.self.user_type))) {
-        router.push('/onboard');
+        router.push("/onboard");
       }
     });
   }, [authUser]);
@@ -22,11 +22,11 @@ const HomePage = () => {
       return;
     }
 
-    const response = await fetch('/api/user', {
-      method: 'GET',
+    const response = await fetch("/api/user", {
+      method: "GET",
       headers: {
-        Authorization: token,
-      },
+        Authorization: token
+      }
     });
     return response.json();
   };
@@ -37,10 +37,14 @@ const HomePage = () => {
         <div></div>
         <div className="flex justify-center space-x-4 text-sm">
           <Link href="/survey">
-            <div className="px-6 py-2 text-gray-800 cursor-pointer bg-neutral-200 ">Submit a new inquiry</div>
+            <div className="px-6 py-2 text-gray-800 cursor-pointer bg-neutral-200 ">
+              Submit a new inquiry
+            </div>
           </Link>
 
-          <div className="px-6 py-2 text-gray-800 cursor-pointer bg-neutral-200 ">View my inquiries</div>
+          <div className="px-6 py-2 text-gray-800 cursor-pointer bg-neutral-200 ">
+            View my inquiries
+          </div>
         </div>
       </div>
     </div>
@@ -48,5 +52,5 @@ const HomePage = () => {
 };
 
 export default withAuthUser({
-  whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,
+  whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN
 })(HomePage);
