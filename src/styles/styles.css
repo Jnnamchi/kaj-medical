@@ -20,10 +20,13 @@
   padding: 16px 8px;
   white-space: normal;
   word-break: break-word;
-  border: 1px solid red;
+  border: 0.5px solid red;
   border-top: 0;
   border-left: 0;
   transition: box-shadow 0.3s;
+}
+.rc-table th {
+  border-bottom: 0.5px solid red;
 }
 .rc-table-rtl.rc-table th,
 .rc-table-rtl.rc-table td {
