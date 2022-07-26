@@ -11,9 +11,7 @@ export default async (req: any, res: any) => {
     const token = req.headers.authorization;
 
     if (token === "unauthenticated") {
-      return res
-        .status(400)
-        .json({ error: "unknown, because you called the API without an ID token" });
+      return res.status(400).json({ error: "unknown, because you called the API without an ID token" });
     } else {
       const authUser = await verifyIdToken(token);
       if (!authUser.id) {
@@ -21,7 +19,7 @@ export default async (req: any, res: any) => {
       }
 
       const userDB = await getDocs(databaseRef);
-      const users = userDB.docs.map(doc => ({
+      const users = userDB.docs.map((doc) => ({
         ...doc.data(),
         docId: doc.id
       }));
@@ -43,9 +41,7 @@ export default async (req: any, res: any) => {
     const token = req.headers.authorization;
 
     if (token === "unauthenticated") {
-      return res
-        .status(400)
-        .json({ error: "unknown, because you called the API without an ID token" });
+      return res.status(400).json({ error: "unknown, because you called the API without an ID token" });
     } else {
       const authUser = await verifyIdToken(token);
       if (!authUser.id) {
@@ -55,7 +51,7 @@ export default async (req: any, res: any) => {
       const { fullName, entity } = JSON.parse(req.body);
 
       const userDB = await getDocs(databaseRef);
-      const users = userDB.docs.map(doc => ({
+      const users = userDB.docs.map((doc) => ({
         ...doc.data(),
         docId: doc.id
       }));

@@ -18,7 +18,7 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, user => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setUser({
           uid: user.uid,
@@ -34,13 +34,11 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
     return () => unsubscribe();
   }, []);
 
-  const signup = (email: string, password: string) =>
-    createUserWithEmailAndPassword(auth, email, password);
+  const signup = (email: string, password: string) => createUserWithEmailAndPassword(auth, email, password);
 
   const authWithGoogle = () => signInWithPopup(auth, new GoogleAuthProvider());
 
-  const login = (email: string, password: string) =>
-    signInWithEmailAndPassword(auth, email, password);
+  const login = (email: string, password: string) => signInWithEmailAndPassword(auth, email, password);
 
   const logout = async () => {
     setUser(null);
@@ -52,9 +50,7 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
   };
 
   return (
-    <AuthContext.Provider
-      value={{ user, login, signup, logout, authWithGoogle, updateUser }}
-    >
+    <AuthContext.Provider value={{ user, login, signup, logout, authWithGoogle, updateUser }}>
       {loading ? null : children}
     </AuthContext.Provider>
   );

@@ -11,9 +11,7 @@ export default async (req: any, res: any) => {
   const token = req.headers.authorization;
 
   if (token === "unauthenticated") {
-    return res
-      .status(400)
-      .json({ error: "unknown, because you called the API without an ID token" });
+    return res.status(400).json({ error: "unknown, because you called the API without an ID token" });
   } else {
     const authUser = await verifyIdToken(token);
     if (!authUser.id) {

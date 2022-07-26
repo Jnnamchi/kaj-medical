@@ -10,9 +10,7 @@ function SelectComponent(props: any) {
       <Select
         options={options}
         value={options.find((option: any) => option.value === formik.values[name])}
-        onChange={(option: { label: string; value: string }) =>
-          formik.setFieldValue(name, option.value)
-        }
+        onChange={(option: { label: string; value: string }) => formik.setFieldValue(name, option.value)}
         {...rest}
       />
       <ErrorMessage component={TextError} name={name} />
