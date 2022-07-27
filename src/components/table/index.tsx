@@ -11,7 +11,8 @@ const SimpleTable = ({ header, body, scrollY }: SimpleTableProps) => {
   const columns = header.map((label: string, idx: number) => ({
     title: label,
     dataIndex: idx,
-    key: idx
+    key: idx,
+    ellipsis: true
   }));
   const data = [];
   for (const row of body) {
