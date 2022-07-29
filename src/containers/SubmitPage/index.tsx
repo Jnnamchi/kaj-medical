@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import countryList from "react-select-country-list";
 import { AuthAction, useAuthUser, withAuthUser } from "next-firebase-auth";
 import SimpleTable from "../../components/table";
-import { matchedDocumentFiles, userTypeOptions } from "../../utils/data";
+import { surveyFields, userTypeOptions } from "../../utils/data";
 
 const SubmitPage = () => {
   const authUser = useAuthUser();
@@ -35,25 +35,21 @@ const SubmitPage = () => {
       const survey: any = [];
       source.forEach((data: any) => {
         const entityType: string = data.entityType;
-        type ObjectKey = keyof typeof matchedDocumentFiles;
-
-        const matched: string[] = matchedDocumentFiles[entityType as ObjectKey];
+        type ObjectKey = keyof typeof surveyFields.document;
+        const matched = surveyFields.document[entityType as ObjectKey];
         const VerificationDocument = () => (
           <div className="max-w-full overflow-hidden text-ellipsis">
-            {matched.map((key) => {
-              if (key === "VATnumberCode") {
-                return (
-                  <p
-                    onClick={() => {
-                      router.push(data[key]);
-                    }}>
-                    {`Passport Number: ${data[key]}`}
-                  </p>
-                );
+            {matched.map((matchedData) => {
+              if (matchedData.name === "VATnumberCode") {
+                return <p>{`Company VAT number : ${data[matchedData.name]}`}</p>;
               }
               return (
-                <p className="overflow-hidden text-blue-500 underline cursor-pointer text-ellipsis whitespace-nowrap">
-                  {data[key]}
+                <p
+                  onClick={() => {
+                    router.push(data[matchedData.name]);
+                  }}
+                  className="overflow-hidden text-blue-500 underline cursor-pointer text-ellipsis whitespace-nowrap">
+                  {matchedData.label}
                 </p>
               );
             })}
@@ -62,16 +58,16 @@ const SubmitPage = () => {
 
         const EkycDetails = () => (
           <div className="max-w-full overflow-hidden text-ellipsis">
-            <p>{`Birthday: ${data.birth}`}</p>
+            <p>{`DoB: ${data.birth}`}</p>
             <p
               onClick={() => router.push(data.governmentId)}
               className="overflow-hidden text-blue-500 underline cursor-pointer whitespace-nowrap text-ellipsis">
-              {data.governmentId}
+              Government ID
             </p>
             <p
               onClick={() => router.push(data.passport)}
               className="overflow-hidden text-blue-500 underline cursor-pointer whitespace-nowrap text-ellipsis">
-              {data.passport}
+              Passport
             </p>
           </div>
         );
