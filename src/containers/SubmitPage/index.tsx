@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import countryList from "react-select-country-list";
 import { AuthAction, useAuthUser, withAuthUser } from "next-firebase-auth";
 import SimpleTable from "../../components/table";
-import { matchedDocumentFiles } from "../../utils/data";
+import { matchedDocumentFiles, userTypeOptions } from "../../utils/data";
 
 const SubmitPage = () => {
   const authUser = useAuthUser();
@@ -39,35 +39,38 @@ const SubmitPage = () => {
 
         const matched: string[] = matchedDocumentFiles[entityType as ObjectKey];
         const VerificationDocument = () => (
-          <div className="">
-            {matched.map((key) => (
-              <p
-                onClick={() => {
-                  if (key === "VATnumberCode") {
-                    return;
-                  }
-                  router.push(data[key]);
-                }}
-                className={`overflow-hidden text-ellipsis ${
-                  key === "VATnumberCode" ? "" : " text-blue-500 underline cursor-pointer "
-                }`}>
-                {data[key]}
-              </p>
-            ))}
+          <div className="max-w-full overflow-hidden text-ellipsis">
+            {matched.map((key) => {
+              if (key === "VATnumberCode") {
+                return (
+                  <p
+                    onClick={() => {
+                      router.push(data[key]);
+                    }}>
+                    {`Passport Number: ${data[key]}`}
+                  </p>
+                );
+              }
+              return (
+                <p className="overflow-hidden text-blue-500 underline cursor-pointer text-ellipsis whitespace-nowrap">
+                  {data[key]}
+                </p>
+              );
+            })}
           </div>
         );
 
         const EkycDetails = () => (
-          <div className="">
-            <p>{data.birth}</p>
+          <div className="max-w-full overflow-hidden text-ellipsis">
+            <p>{`Birthday: ${data.birth}`}</p>
             <p
               onClick={() => router.push(data.governmentId)}
-              className="overflow-hidden text-blue-500 underline cursor-pointer text-ellipsis">
+              className="overflow-hidden text-blue-500 underline cursor-pointer whitespace-nowrap text-ellipsis">
               {data.governmentId}
             </p>
             <p
               onClick={() => router.push(data.passport)}
-              className="overflow-hidden text-blue-500 underline cursor-pointer text-ellipsis">
+              className="overflow-hidden text-blue-500 underline cursor-pointer whitespace-nowrap text-ellipsis">
               {data.passport}
             </p>
           </div>
@@ -83,7 +86,7 @@ const SubmitPage = () => {
           </p>,
           data.companyEntity,
           countryList().getLabel(data.location),
-          entityType,
+          userTypeOptions.find((data) => data.value === entityType)?.label,
           data.requestDescription,
           <VerificationDocument />,
           <EkycDetails />
@@ -105,6 +108,9 @@ const SubmitPage = () => {
   return (
     <div className="container px-4 mx-auto">
       <div className="p-6 py-8 space-y-8">
+        <button onClick={() => router.push("/")} className="p-2 px-6 text-sm bg-gray-200 rounded ">
+          Go Back
+        </button>
         <SimpleTable
           header={[
             "First and Last Name",
