@@ -14,12 +14,12 @@ const ControlWrapper = ({ label, children }: any) => {
 };
 
 function SurveyFormikControl(props: any) {
-  const { control, label, ...rest } = props;
+  const { control, label, onClickException, loading, ...rest } = props;
   switch (control) {
     case "input":
       return (
         <ControlWrapper label={label}>
-          <Input {...rest} />
+          <Input {...rest} onClickException={onClickException} loading={loading} />
         </ControlWrapper>
       );
 

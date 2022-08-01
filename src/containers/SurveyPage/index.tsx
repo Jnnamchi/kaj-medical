@@ -99,7 +99,7 @@ const SurveyPage = () => {
   };
 
   const surveySteps = [
-    <InquiryStep next={handleNextStep} data={formData} />,
+    <InquiryStep next={handleNextStep} data={formData} user={authUser} />,
     <DocumentStep next={handleNextStep} prev={handlePrevStep} data={formData} />,
     <EkycStep next={handleNextStep} prev={handlePrevStep} data={formData} />
   ];
@@ -127,17 +127,35 @@ const SurveyPage = () => {
   );
 };
 
-const SurveyPart = ({ fields, formik }: any) => {
-  if (fields) {
-    return fields.map((field: any, id: number) => {
-      return <FormikControl {...field} formik={formik} key={id} />;
-    });
-  }
-};
+const SurveyPart = ({ fields, formik, onClickException, loading }: any) =>
+  fields.map((field: any, id: number) => (
+    <FormikControl {...field} formik={formik} key={id} onClickException={onClickException} loading={loading} />
+  ));
 
 const InquiryStep = (props: InquiryStepInterface) => {
+  const [validateEmail, setValidateEmail] = useState(false);
+  const [validateLoading, setValidationLoading] = useState(false);
+  const [disableBtn, setDisableBtn] = useState(false);
   const handleSubmit = (values: any) => {
     props.next(values);
+  };
+
+  const handleValidateEmail = async (values: any) => {
+    setValidateEmail(true);
+    setDisableBtn(false);
+
+    const token = await props.user.getIdToken();
+    setValidationLoading(true);
+
+    fetch("/api/validate", {
+      method: "POST",
+      headers: {
+        Authorization: token || "unauthenticated"
+      },
+      body: JSON.stringify(values.email)
+    }).then((res) => {
+      setValidationLoading(false);
+    });
   };
 
   return (
@@ -145,9 +163,17 @@ const InquiryStep = (props: InquiryStepInterface) => {
       {(formik) => (
         <Form>
           <div className="py-8 space-y-4">
-            <SurveyPart fields={surveyFields.inquiry} formik={formik} />
+            <SurveyPart
+              fields={surveyFields.inquiry}
+              formik={formik}
+              onClickException={handleValidateEmail}
+              loading={validateLoading}
+            />
             <div className="flex justify-center">
-              <button type="submit" className="px-4 py-2 border border-gray-600 rounded">
+              <button
+                type="submit"
+                className={`px-4 py-2 border border-gray-600 rounded ${validateEmail ? "" : "cursor-not-allowed"}`}
+                disabled={!validateEmail}>
                 Continue
               </button>
             </div>
