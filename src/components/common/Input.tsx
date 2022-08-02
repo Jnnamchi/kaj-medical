@@ -2,7 +2,7 @@ import { Field, ErrorMessage } from "formik";
 import TextError from "./TextError";
 
 function Input(props: any) {
-  const { label, name, type, formik, onClickException, loading, ...rest } = props;
+  const { label, name, type, formik, onClickException, loading, disableBtn, validated, ...rest } = props;
   if (type === "file") {
     return (
       <div>
@@ -32,17 +32,36 @@ function Input(props: any) {
           {...rest}
         />
         <ErrorMessage component={TextError} name={name} />
-        <button
-          className="px-6 py-2 mt-4 text-sm text-white bg-gray-500 rounded-sm"
-          onClick={(e) => {
-            e.preventDefault();
-            onClickException(formik.values);
-          }}>
-          Validate Email
-        </button>
-        <p className="text-sm text-gray-600 ">
-          ( Validation check is required, you can move to the next section even if validation fails. )
-        </p>
+
+        {!disableBtn && (
+          <>
+            <button
+              className="px-6 py-2 mt-4 text-sm text-white bg-gray-500 rounded-sm"
+              onClick={(e) => {
+                e.preventDefault();
+
+                if (formik.values.email && !formik.errors.email) {
+                  onClickException(formik.values);
+                }
+              }}>
+              Validate Email
+            </button>
+            <p className="text-sm text-gray-600 ">
+              Validation check is required, you can move to the next section even if validation fails.
+            </p>
+          </>
+        )}
+
+        {loading && <p className="text-sm text-yellow-400 ">Validating Email...</p>}
+
+        {!disableBtn ||
+          (validated ? (
+            <p className="text-sm text-green-500">Email validation successful with score of QUALITY_SCORE</p>
+          ) : (
+            <p className="text-sm text-red-500">
+              Email validation failed - with reason for failure undeliverable or is not smtp valid
+            </p>
+          ))}
       </div>
     );
   }

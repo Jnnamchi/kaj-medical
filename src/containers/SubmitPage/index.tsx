@@ -10,6 +10,7 @@ const SubmitPage = () => {
   const router = useRouter();
 
   const [surveyData, setSurveyData] = useState<any>([]);
+  console.log("🚀 ~ file: index.tsx ~ line 13 ~ SubmitPage ~ surveyData", surveyData);
 
   useEffect(() => {
     const getSurveyData = async () => {
@@ -32,19 +33,21 @@ const SubmitPage = () => {
     };
 
     const getTableData = (source: any) => {
+      console.log("🚀 ~ file: index.tsx ~ line 36 ~ getTableData ~ source", source);
       const survey: any = [];
-      source.forEach((data: any) => {
+      source.forEach((data: any, id: number) => {
         const entityType: string = data.entityType;
         type ObjectKey = keyof typeof surveyFields.document;
         const matched = surveyFields.document[entityType as ObjectKey];
         const VerificationDocument = () => (
           <div className="max-w-full overflow-hidden text-ellipsis">
-            {matched.map((matchedData) => {
+            {matched?.map((matchedData, idx) => {
               if (matchedData.name === "VATnumberCode") {
-                return <p>{`Company VAT number : ${data[matchedData.name]}`}</p>;
+                return <p key={`${id}-${idx}`}>{`Company VAT number : ${data[matchedData.name]}`}</p>;
               }
               return (
                 <p
+                  key={`${id}-${idx}`}
                   onClick={() => {
                     router.push(data[matchedData.name]);
                   }}
@@ -74,16 +77,23 @@ const SubmitPage = () => {
 
         survey.push([
           <p>{`${data.firstName} ${data.lastName}`}</p>,
-          data.email,
+          <div>
+            <p>{data.email}</p>
+
+            <p className={`${data.email_is_valid ? "text-green-500" : "text-red-500"}`}>
+              {data.email_is_valid ? "Valid Email" : "Invalid Email"}
+            </p>
+          </div>,
           <p
             onClick={() => router.push(data.companySite)}
             className="overflow-hidden text-blue-500 underline cursor-pointer text-ellipsis">
             {data.companySite},
           </p>,
           data.companyEntity,
-          countryList().getLabel(data.location),
+          (data.location && countryList().getLabel(data.location)) || data.location,
           userTypeOptions.find((data) => data.value === entityType)?.label,
           data.requestDescription,
+          "ddd",
           <VerificationDocument />,
           <EkycDetails />
         ]);
