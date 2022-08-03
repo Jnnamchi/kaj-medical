@@ -20,7 +20,6 @@ export default async (req: any, res: any) => {
       const result = await fetch(
         `https://emailvalidation.abstractapi.com/v1/?api_key=e91abe0d1c724e7bb1df1ca19762b35f&email=${email}`
       ).then((res) => res.json());
-      console.log("🚀 ~ file: validate.ts ~ line 26 ~ result", result);
 
       try {
         return res.status(200).json({ data: result });

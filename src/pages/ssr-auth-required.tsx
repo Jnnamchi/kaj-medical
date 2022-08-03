@@ -14,7 +14,6 @@ const styles = {
 
 const Demo = ({ favoriteColor }: any) => {
   const AuthUser = useAuthUser();
-  console.log("🚀 ~ file: ssr-auth-required.tsx ~ line 22 ~ Demo ~ AuthUser", AuthUser);
   return (
     <div>
       <p onClick={AuthUser.signOut}>{AuthUser.email}</p>

@@ -128,7 +128,7 @@ const SurveyPage = () => {
   );
 };
 
-const SurveyPart = ({ fields, formik, onClickException, loading, disableBtn, validated }: any) =>
+const SurveyPart = ({ fields, formik, onClickException, loading, disableBtn, validated, qualityScore }: any) =>
   fields?.map((field: any, id: number) => (
     <FormikControl
       {...field}
@@ -138,6 +138,7 @@ const SurveyPart = ({ fields, formik, onClickException, loading, disableBtn, val
       loading={loading}
       disableBtn={disableBtn}
       validated={validated}
+      qualityScore={qualityScore}
     />
   ));
 
@@ -146,6 +147,8 @@ const InquiryStep = (props: InquiryStepInterface) => {
   const [validateLoading, setValidationLoading] = useState(false);
   const [disableBtn, setDisableBtn] = useState(false);
   const [validated, setValidated] = useState(false);
+  const [qualityScore, setQualityScore] = useState("");
+
   const handleSubmit = (values: any) => {
     props.next({ ...values, email_is_valid: validated });
   };
@@ -167,6 +170,7 @@ const InquiryStep = (props: InquiryStepInterface) => {
       .then((res) => {
         if (res && res.data && res.data.is_smtp_valid) {
           setValidated(res.data.is_smtp_valid.value);
+          setQualityScore(res.data.quality_score);
         }
         setValidationLoading(false);
         setDisableBtn(true);
@@ -185,6 +189,7 @@ const InquiryStep = (props: InquiryStepInterface) => {
               loading={validateLoading}
               disableBtn={disableBtn}
               validated={validated}
+              qualityScore={qualityScore}
             />
             <div className="flex justify-center">
               <button

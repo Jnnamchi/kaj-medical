@@ -2,7 +2,7 @@ import { Field, ErrorMessage } from "formik";
 import TextError from "./TextError";
 
 function Input(props: any) {
-  const { label, name, type, formik, onClickException, loading, disableBtn, validated, ...rest } = props;
+  const { label, name, type, formik, onClickException, loading, disableBtn, validated, qualityScore, ...rest } = props;
   if (type === "file") {
     return (
       <div>
@@ -56,7 +56,9 @@ function Input(props: any) {
 
         {!disableBtn ||
           (validated ? (
-            <p className="text-sm text-green-500">Email validation successful with score of QUALITY_SCORE</p>
+            <p className="text-sm text-green-500">
+              Email validation successful with score of <span className="font-bold ">{qualityScore}</span>
+            </p>
           ) : (
             <p className="text-sm text-red-500">
               Email validation failed - with reason for failure undeliverable or is not smtp valid

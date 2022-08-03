@@ -14,7 +14,7 @@ const ControlWrapper = ({ label, children }: any) => {
 };
 
 function SurveyFormikControl(props: any) {
-  const { control, label, onClickException, loading, disableBtn, validated, ...rest } = props;
+  const { control, label, onClickException, loading, disableBtn, validated, qualityScore, ...rest } = props;
   switch (control) {
     case "input":
       return (
@@ -25,6 +25,7 @@ function SurveyFormikControl(props: any) {
             loading={loading}
             disableBtn={disableBtn}
             validated={validated}
+            qualityScore={qualityScore}
           />
         </ControlWrapper>
       );

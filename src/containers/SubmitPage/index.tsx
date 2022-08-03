@@ -10,7 +10,6 @@ const SubmitPage = () => {
   const router = useRouter();
 
   const [surveyData, setSurveyData] = useState<any>([]);
-  console.log("🚀 ~ file: index.tsx ~ line 13 ~ SubmitPage ~ surveyData", surveyData);
 
   useEffect(() => {
     const getSurveyData = async () => {
@@ -33,7 +32,6 @@ const SubmitPage = () => {
     };
 
     const getTableData = (source: any) => {
-      console.log("🚀 ~ file: index.tsx ~ line 36 ~ getTableData ~ source", source);
       const survey: any = [];
       source.forEach((data: any, id: number) => {
         const entityType: string = data.entityType;
@@ -93,7 +91,6 @@ const SubmitPage = () => {
           (data.location && countryList().getLabel(data.location)) || data.location,
           userTypeOptions.find((data) => data.value === entityType)?.label,
           data.requestDescription,
-          "ddd",
           <VerificationDocument />,
           <EkycDetails />
         ]);

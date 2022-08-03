@@ -9,7 +9,6 @@ const HomePage = () => {
 
   useEffect(() => {
     getUserData().then((res) => {
-      console.log("🚀 ~ file: index.tsx ~ line 11 ~ saveOnboardData ~ res", res);
       if (res && (!res.self || (res.self && !res.self.user_type))) {
         router.push("/onboard");
       }
