@@ -1,6 +1,7 @@
 export interface InquiryStepInterface {
   next: Function;
   data: any;
+  user: any;
 }
 
 export interface DocumentStepInterface {

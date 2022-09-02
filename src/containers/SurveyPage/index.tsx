@@ -28,7 +28,8 @@ const SurveyPage = () => {
     requestDescription: "",
     birth: "",
     governmentId: "",
-    passport: ""
+    passport: "",
+    email_is_valid: false
   });
 
   type ObjectKey = keyof typeof documentInitValues;
@@ -99,7 +100,7 @@ const SurveyPage = () => {
   };
 
   const surveySteps = [
-    <InquiryStep next={handleNextStep} data={formData} />,
+    <InquiryStep next={handleNextStep} data={formData} user={authUser} />,
     <DocumentStep next={handleNextStep} prev={handlePrevStep} data={formData} />,
     <EkycStep next={handleNextStep} prev={handlePrevStep} data={formData} />
   ];
@@ -127,17 +128,53 @@ const SurveyPage = () => {
   );
 };
 
-const SurveyPart = ({ fields, formik }: any) => {
-  if (fields) {
-    return fields.map((field: any, id: number) => {
-      return <FormikControl {...field} formik={formik} key={id} />;
-    });
-  }
-};
+const SurveyPart = ({ fields, formik, onClickException, loading, disableBtn, validated, qualityScore }: any) =>
+  fields?.map((field: any, id: number) => (
+    <FormikControl
+      {...field}
+      formik={formik}
+      key={id}
+      onClickException={onClickException}
+      loading={loading}
+      disableBtn={disableBtn}
+      validated={validated}
+      qualityScore={qualityScore}
+    />
+  ));
 
 const InquiryStep = (props: InquiryStepInterface) => {
+  const [processValidate, setProcessValidate] = useState(false);
+  const [validateLoading, setValidationLoading] = useState(false);
+  const [disableBtn, setDisableBtn] = useState(false);
+  const [validated, setValidated] = useState(false);
+  const [qualityScore, setQualityScore] = useState("");
+
   const handleSubmit = (values: any) => {
-    props.next(values);
+    props.next({ ...values, email_is_valid: validated });
+  };
+
+  const handleValidateEmail = async (values: any) => {
+    setProcessValidate(true);
+
+    const token = await props.user.getIdToken();
+    setValidationLoading(true);
+
+    await fetch("/api/validate", {
+      method: "POST",
+      headers: {
+        Authorization: token || "unauthenticated"
+      },
+      body: JSON.stringify({ email: values.email })
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        if (res && res.data && res.data.is_smtp_valid) {
+          setValidated(res.data.is_smtp_valid.value);
+          setQualityScore(res.data.quality_score);
+        }
+        setValidationLoading(false);
+        setDisableBtn(true);
+      });
   };
 
   return (
@@ -145,9 +182,20 @@ const InquiryStep = (props: InquiryStepInterface) => {
       {(formik) => (
         <Form>
           <div className="py-8 space-y-4">
-            <SurveyPart fields={surveyFields.inquiry} formik={formik} />
+            <SurveyPart
+              fields={surveyFields.inquiry}
+              formik={formik}
+              onClickException={handleValidateEmail}
+              loading={validateLoading}
+              disableBtn={disableBtn}
+              validated={validated}
+              qualityScore={qualityScore}
+            />
             <div className="flex justify-center">
-              <button type="submit" className="px-4 py-2 border border-gray-600 rounded">
+              <button
+                type="submit"
+                className={`px-4 py-2 border border-gray-600 rounded ${processValidate ? "" : "cursor-not-allowed"}`}
+                disabled={!processValidate}>
                 Continue
               </button>
             </div>

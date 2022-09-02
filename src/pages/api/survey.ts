@@ -1,7 +1,7 @@
 import { verifyIdToken } from "next-firebase-auth";
 import initAuth from "../../utils/initAuth";
 import { database } from "../../config/firebase";
-import { collection, addDoc, getDocs } from "firebase/firestore";
+import { collection, addDoc, getDocs, query, where } from "firebase/firestore";
 
 initAuth();
 
@@ -29,13 +29,17 @@ export default async (req: any, res: any) => {
       }
     } else if (req.method === "GET") {
       try {
-        const surveyDB = await getDocs(databaseRef);
-        const surveyData = surveyDB.docs.map((doc) => ({
-          ...doc.data(),
-          docId: doc.id
-        }));
+        const q = query(databaseRef, where("submitted_by", "==", authUser.id));
+        const querySnapshot = await getDocs(q);
+        const data: any = [];
+        querySnapshot.forEach((doc) => data.push(doc.data()));
+        // const surveyDB = await getDocs(databaseRef);
+        // const surveyData = surveyDB.docs.map((doc) => ({
+        //   ...doc.data(),
+        //   docId: doc.id
+        // }));
 
-        return res.status(200).json(surveyData);
+        return res.status(200).json(data);
       } catch (err) {
         return res.status(500).json({ err });
       }
