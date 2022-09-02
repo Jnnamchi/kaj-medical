@@ -11,11 +11,7 @@ const AuthPage = () => {
   const [showRegisterForm, setShowRegisterForm] = useState(false);
   const { login, signup, authWithGoogle } = useAuth();
 
-  const addUserDataToFireStore = async (user: {
-    uid: string;
-    email: string;
-    user_name?: string;
-  }) => {
+  const addUserDataToFireStore = async (user: { uid: string; email: string; user_name?: string }) => {
     const endpoint = getAbsoluteURL("/api/user");
     const response = await fetch(endpoint, {
       method: "POST",
@@ -27,11 +23,7 @@ const AuthPage = () => {
     });
     const data = await response.json();
     if (!response.ok) {
-      console.error(
-        `Data fetching failed with status ${response.status}: ${JSON.stringify(
-          data
-        )}`
-      );
+      console.error(`Data fetching failed with status ${response.status}: ${JSON.stringify(data)}`);
       return null;
     }
     return data;
@@ -72,26 +64,20 @@ const AuthPage = () => {
               <Formik
                 initialValues={{ email: "", password: "" }}
                 validationSchema={Yup.object().shape({
-                  email: Yup.string()
-                    .email("Invalid email")
-                    .required("Email Required"),
+                  email: Yup.string().email("Invalid email").required("Email Required"),
                   password: Yup.string().required("Password Required")
                 })}
-                onSubmit={handleSubmit}
-              >
+                onSubmit={handleSubmit}>
                 {({ errors, touched }) => (
                   <Form>
                     <div className="flex flex-row items-center justify-center lg:justify-start">
-                      <p className="mb-0 mr-4 text-lg">
-                        {showRegisterForm ? "Register" : "Sign in"} with
-                      </p>
+                      <p className="mb-0 mr-4 text-lg">{showRegisterForm ? "Register" : "Sign in"} with</p>
                       <button
                         onClick={handleAuthWithGoogle}
                         type="button"
                         data-mdb-ripple="true"
                         data-mdb-ripple-color="light"
-                        className="inline-block p-3 mx-1 text-xs font-medium leading-tight text-white uppercase transition duration-150 ease-in-out bg-blue-600 rounded-full shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg"
-                      >
+                        className="inline-block p-3 mx-1 text-xs font-medium leading-tight text-white uppercase transition duration-150 ease-in-out bg-blue-600 rounded-full shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           aria-hidden="true"
@@ -99,8 +85,7 @@ const AuthPage = () => {
                           width="1em"
                           height="1em"
                           preserveAspectRatio="xMidYMid meet"
-                          viewBox="0 0 24 24"
-                        >
+                          viewBox="0 0 24 24">
                           <path
                             fill="currentColor"
                             d="M21.456 10.154c.123.659.19 1.348.19 2.067c0 5.624-3.764 9.623-9.449 9.623A9.841 9.841 0 0 1 2.353 12a9.841 9.841 0 0 1 9.844-9.844c2.658 0 4.879.978 6.583 2.566l-2.775 2.775V7.49c-1.033-.984-2.344-1.489-3.808-1.489c-3.248 0-5.888 2.744-5.888 5.993c0 3.248 2.64 5.998 5.888 5.998c2.947 0 4.953-1.685 5.365-3.999h-5.365v-3.839h9.26Z"
@@ -137,9 +122,7 @@ const AuthPage = () => {
                         name="password"
                       />
                       {errors.password && touched.password ? (
-                        <span className="text-sm text-red-500">
-                          {errors.password}
-                        </span>
+                        <span className="text-sm text-red-500">{errors.password}</span>
                       ) : null}
                     </div>
 
@@ -150,9 +133,7 @@ const AuthPage = () => {
                           className="float-left w-4 h-4 mt-1 mr-2 align-top transition duration-200 bg-white bg-center bg-no-repeat bg-contain border border-gray-300 rounded-sm appearance-none cursor-pointer form-check-input checked:bg-blue-600 checked:border-blue-600 focus:outline-none"
                           id="exampleCheck2"
                         />
-                        <label className="inline-block text-gray-800 form-check-label">
-                          Remember me
-                        </label>
+                        <label className="inline-block text-gray-800 form-check-label">Remember me</label>
                       </div>
                       <a href="#!" className="text-gray-800">
                         Forgot password?
@@ -162,19 +143,13 @@ const AuthPage = () => {
                     <div className="text-center lg:text-left">
                       <button
                         type="submit"
-                        className="inline-block py-3 text-sm font-medium leading-snug text-white uppercase transition duration-150 ease-in-out bg-blue-600 rounded shadow-md px-7 hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg"
-                      >
+                        className="inline-block py-3 text-sm font-medium leading-snug text-white uppercase transition duration-150 ease-in-out bg-blue-600 rounded shadow-md px-7 hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg">
                         {showRegisterForm ? "Register" : "Login"}
                       </button>
                       <p
                         className="pt-1 mt-2 mb-0 text-sm font-semibold"
-                        onClick={() => setShowRegisterForm(!showRegisterForm)}
-                      >
-                        <span>
-                          {showRegisterForm
-                            ? "Already have an account?"
-                            : `Don't have an account?`}
-                        </span>
+                        onClick={() => setShowRegisterForm(!showRegisterForm)}>
+                        <span>{showRegisterForm ? "Already have an account?" : `Don't have an account?`}</span>
                         <span className="ml-2 text-red-600 transition duration-200 ease-in-out cursor-pointer hover:text-red-700 focus:text-red-700">
                           {showRegisterForm ? "Login" : "Register"}
                         </span>

@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  useAuthUser,
-  withAuthUser,
-  withAuthUserTokenSSR,
-  AuthAction
-} from "next-firebase-auth";
+import { useAuthUser, withAuthUser, withAuthUserTokenSSR, AuthAction } from "next-firebase-auth";
 // import DemoPageLinks from "../components/DemoPageLinks";
 import getAbsoluteURL from "../utils/getAbsoluteURL";
 
@@ -19,10 +14,7 @@ const styles = {
 
 const Demo = ({ favoriteColor }: any) => {
   const AuthUser = useAuthUser();
-  console.log(
-    "🚀 ~ file: ssr-auth-required.tsx ~ line 22 ~ Demo ~ AuthUser",
-    AuthUser
-  );
+  console.log("🚀 ~ file: ssr-auth-required.tsx ~ line 22 ~ Demo ~ AuthUser", AuthUser);
   return (
     <div>
       <p onClick={AuthUser.signOut}>{AuthUser.email}</p>
@@ -31,8 +23,8 @@ const Demo = ({ favoriteColor }: any) => {
         <div style={styles.infoTextContainer}>
           <h3>Example: SSR + data fetching with ID token</h3>
           <p>
-            This page requires authentication. It will do a server-side redirect
-            (307) to the login page if the auth cookies are not set.
+            This page requires authentication. It will do a server-side redirect (307) to the login page if the auth
+            cookies are not set.
           </p>
           <p>Your favorite color is: {favoriteColor}</p>
         </div>
@@ -63,9 +55,7 @@ export const getServerSideProps = withAuthUserTokenSSR({
   });
   const data = await response.json();
   if (!response.ok) {
-    throw new Error(
-      `Data fetching failed with status ${response.status}: ${JSON.stringify(data)}`
-    );
+    throw new Error(`Data fetching failed with status ${response.status}: ${JSON.stringify(data)}`);
   }
   return {
     props: {

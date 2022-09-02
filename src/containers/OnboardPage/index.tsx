@@ -30,11 +30,7 @@ const OnBoardPage = () => {
       });
       const data = await response.json();
       if (!response.ok) {
-        console.error(
-          `Data fetching failed with status ${response.status}: ${JSON.stringify(
-            data
-          )}`
-        );
+        console.error(`Data fetching failed with status ${response.status}: ${JSON.stringify(data)}`);
         return null;
       }
       return data;
@@ -52,11 +48,7 @@ const OnBoardPage = () => {
     });
     const data = await response.json();
     if (!response.ok) {
-      console.error(
-        `Data fetching failed with status ${response.status}: ${JSON.stringify(
-          data
-        )}`
-      );
+      console.error(`Data fetching failed with status ${response.status}: ${JSON.stringify(data)}`);
       return null;
     }
     return data;
@@ -67,9 +59,7 @@ const OnBoardPage = () => {
   };
 
   const validationSchema = Yup.object().shape({
-    fullName: Yup.string()
-      .required("Full Name is required")
-      .max(50, "Sorry, name is too long"),
+    fullName: Yup.string().required("Full Name is required").max(50, "Sorry, name is too long"),
     entity: Yup.string().required("Entity Type is required")
   });
 
@@ -82,19 +72,13 @@ const OnBoardPage = () => {
             entity: ""
           }}
           validationSchema={validationSchema}
-          onSubmit={handleSubmit}
-        >
+          onSubmit={handleSubmit}>
           {(formik: any) => {
             return (
               <Form className="space-y-6 ">
                 <div>
                   <p className="mb-2">What is your Full Name ?</p>
-                  <Input
-                    formik={formik}
-                    name="fullName"
-                    placeholder="Full Name"
-                    type="text"
-                  />
+                  <Input formik={formik} name="fullName" placeholder="Full Name" type="text" />
                 </div>
 
                 <div>
@@ -103,10 +87,7 @@ const OnBoardPage = () => {
                 </div>
 
                 <div className="flex">
-                  <button
-                    type="submit"
-                    className="w-2/3 px-4 py-2 m-auto mt-4 text-white bg-gray-500 rounded"
-                  >
+                  <button type="submit" className="w-2/3 px-4 py-2 m-auto mt-4 text-white bg-gray-500 rounded">
                     Submit
                   </button>
                 </div>

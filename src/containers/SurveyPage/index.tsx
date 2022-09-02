@@ -8,16 +8,8 @@ import { AuthAction, useAuthUser, withAuthUser } from "next-firebase-auth";
 import { storage } from "../../config/firebase";
 import { documentSchema, ekycSchema, inquirySchema } from "./schema";
 import FormikControl from "../../components/surveyPage/SurveyFormikControl";
-import {
-  documentInitValues,
-  matchedDocumentFiles,
-  surveyFields
-} from "../../utils/data";
-import {
-  DocumentStepInterface,
-  EkycStepInterface,
-  InquiryStepInterface
-} from "./interface";
+import { documentInitValues, matchedDocumentFiles, surveyFields } from "../../utils/data";
+import { DocumentStepInterface, EkycStepInterface, InquiryStepInterface } from "./interface";
 
 const SurveyPage = () => {
   const router = useRouter();
@@ -51,7 +43,7 @@ const SurveyPage = () => {
 
   useEffect(() => {
     if (documentInitValues[formData.entityType as ObjectKey]) {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
         ...documentInitValues[formData.entityType as ObjectKey]
       }));
@@ -61,17 +53,15 @@ const SurveyPage = () => {
   const makeRequest = async (formData: any) => {
     type FileObjectKey = keyof typeof matchedDocumentFiles;
     await Promise.all(
-      [
-        ...(matchedDocumentFiles[formData.entityType as FileObjectKey] || []),
-        "passport",
-        "governmentId"
-      ].map(async file => {
-        if (file !== "VATnumberCode") {
-          formData[file] = await uploadFile(formData[file]);
-        } else {
-          formData[file] = formData[file];
+      [...(matchedDocumentFiles[formData.entityType as FileObjectKey] || []), "passport", "governmentId"].map(
+        async (file) => {
+          if (file !== "VATnumberCode") {
+            formData[file] = await uploadFile(formData[file]);
+          } else {
+            formData[file] = formData[file];
+          }
         }
-      })
+      )
     );
 
     const token = await authUser.getIdToken();
@@ -87,29 +77,25 @@ const SurveyPage = () => {
     });
     const data = await response.json();
     if (!response.ok) {
-      console.error(
-        `Data fetching failed with status ${response.status}: ${JSON.stringify(
-          data
-        )}`
-      );
+      console.error(`Data fetching failed with status ${response.status}: ${JSON.stringify(data)}`);
       return null;
     }
 
-    setCurrentStep(prev => prev + 1);
+    setCurrentStep((prev) => prev + 1);
   };
 
   const handleNextStep = (newData: any, final = false) => {
-    setFormData(prev => ({ ...prev, ...newData }));
+    setFormData((prev) => ({ ...prev, ...newData }));
     if (final) {
       makeRequest(newData);
       return;
     }
-    setCurrentStep(prev => prev + 1);
+    setCurrentStep((prev) => prev + 1);
   };
 
   const handlePrevStep = (newData: any) => {
-    setFormData(prev => ({ ...prev, ...newData }));
-    setCurrentStep(prev => prev - 1);
+    setFormData((prev) => ({ ...prev, ...newData }));
+    setCurrentStep((prev) => prev - 1);
   };
 
   const surveySteps = [
@@ -132,10 +118,7 @@ const SurveyPage = () => {
       {surveySteps[currentStep]}
       {currentStep === 3 && (
         <div className="flex justify-center mt-4">
-          <button
-            onClick={() => router.push("/")}
-            className="px-4 py-2 border border-gray-600 rounded"
-          >
+          <button onClick={() => router.push("/")} className="px-4 py-2 border border-gray-600 rounded">
             Go To Home
           </button>
         </div>
@@ -158,20 +141,13 @@ const InquiryStep = (props: InquiryStepInterface) => {
   };
 
   return (
-    <Formik
-      validationSchema={inquirySchema}
-      initialValues={props.data}
-      onSubmit={handleSubmit}
-    >
-      {formik => (
+    <Formik validationSchema={inquirySchema} initialValues={props.data} onSubmit={handleSubmit}>
+      {(formik) => (
         <Form>
           <div className="py-8 space-y-4">
             <SurveyPart fields={surveyFields.inquiry} formik={formik} />
             <div className="flex justify-center">
-              <button
-                type="submit"
-                className="px-4 py-2 border border-gray-600 rounded"
-              >
+              <button type="submit" className="px-4 py-2 border border-gray-600 rounded">
                 Continue
               </button>
             </div>
@@ -191,33 +167,21 @@ const DocumentStep = (props: DocumentStepInterface) => {
   const schema = documentSchema[props.data.entityType as ObjectKey];
 
   return (
-    <Formik
-      validationSchema={schema}
-      initialValues={props.data}
-      onSubmit={handleSubmit}
-      enableReinitialize
-    >
-      {formik => (
+    <Formik validationSchema={schema} initialValues={props.data} onSubmit={handleSubmit} enableReinitialize>
+      {(formik) => (
         <Form>
           <div className="py-8 space-y-4">
-            <SurveyPart
-              fields={surveyFields.document[formik.values.entityType as ObjectKey]}
-              formik={formik}
-            />
+            <SurveyPart fields={surveyFields.document[formik.values.entityType as ObjectKey]} formik={formik} />
 
             <div className="flex justify-center space-x-4">
               <button
                 className="px-4 py-2 border border-gray-600 rounded"
                 type="button"
-                onClick={() => props.prev(formik.values)}
-              >
+                onClick={() => props.prev(formik.values)}>
                 Back
               </button>
 
-              <button
-                type="submit"
-                className="px-4 py-2 border border-gray-600 rounded"
-              >
+              <button type="submit" className="px-4 py-2 border border-gray-600 rounded">
                 Continue
               </button>
             </div>
@@ -234,13 +198,8 @@ const EkycStep = (props: EkycStepInterface) => {
   };
 
   return (
-    <Formik
-      validationSchema={ekycSchema}
-      initialValues={props.data}
-      onSubmit={handleSubmit}
-      enableReinitialize
-    >
-      {formik => (
+    <Formik validationSchema={ekycSchema} initialValues={props.data} onSubmit={handleSubmit} enableReinitialize>
+      {(formik) => (
         <Form>
           <div className="py-8 space-y-4">
             <SurveyPart fields={surveyFields.ekyc} formik={formik} />
@@ -249,15 +208,11 @@ const EkycStep = (props: EkycStepInterface) => {
               <button
                 className="px-4 py-2 border border-gray-600 rounded"
                 type="button"
-                onClick={() => props.prev(formik.values)}
-              >
+                onClick={() => props.prev(formik.values)}>
                 Back
               </button>
 
-              <button
-                type="submit"
-                className="px-4 py-2 border border-gray-600 rounded"
-              >
+              <button type="submit" className="px-4 py-2 border border-gray-600 rounded">
                 Finish
               </button>
             </div>

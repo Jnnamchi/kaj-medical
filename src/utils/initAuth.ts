@@ -13,11 +13,8 @@ const initAuth = () => {
     // specify `authPageURL: '/auth-ssr'`.
     authPageURL: ({ ctx }) => {
       const isServerSide = typeof window === "undefined";
-      const origin = isServerSide
-        ? absoluteUrl(ctx.req).origin
-        : window.location.origin;
-      const destPath =
-        typeof window === "undefined" ? ctx.resolvedUrl : window.location.href;
+      const origin = isServerSide ? absoluteUrl(ctx.req).origin : window.location.origin;
+      const destPath = typeof window === "undefined" ? ctx.resolvedUrl : window.location.href;
       const destURL: any = new URL(destPath, origin);
       return `auth?destination=${encodeURIComponent(destURL)}`;
     },
@@ -27,15 +24,11 @@ const initAuth = () => {
     // specify `appPageURL: '/'`.
     appPageURL: ({ ctx }: any) => {
       const isServerSide = typeof window === "undefined";
-      const origin = isServerSide
-        ? absoluteUrl(ctx.req).origin
-        : window.location.origin;
+      const origin = isServerSide ? absoluteUrl(ctx.req).origin : window.location.origin;
       const params: any = isServerSide
         ? new URL(ctx.req.url, origin).searchParams
         : new URLSearchParams(window.location.search);
-      const destinationParamVal = params.get("destination")
-        ? decodeURIComponent(params.get("destination"))
-        : undefined;
+      const destinationParamVal = params.get("destination") ? decodeURIComponent(params.get("destination")) : undefined;
 
       // By default, go to the index page if the destination URL
       // is invalid or unspecified.
@@ -49,9 +42,7 @@ const initAuth = () => {
           destURL = destinationParamVal;
         } else {
           // eslint-disable-next-line no-console
-          console.warn(
-            `Redirect destination host must be one of ${allowedHosts.join(", ")}.`
-          );
+          console.warn(`Redirect destination host must be one of ${allowedHosts.join(", ")}.`);
         }
       }
       return destURL;
@@ -60,27 +51,17 @@ const initAuth = () => {
     logoutAPIEndpoint: "/api/logout",
     firebaseAdminInitConfig: {
       credential: {
-        projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID
-          ? process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID
-          : "",
-        clientEmail: process.env.FIREBASE_CLIENT_EMAIL
-          ? process.env.FIREBASE_CLIENT_EMAIL
-          : "",
+        projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID ? process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID : "",
+        clientEmail: process.env.FIREBASE_CLIENT_EMAIL ? process.env.FIREBASE_CLIENT_EMAIL : "",
         // Using JSON to handle newline problems when storing the
         // key as a secret in Vercel. See:
         // https://github.com/vercel/vercel/issues/749#issuecomment-707515089
-        privateKey: process.env.FIREBASE_PRIVATE_KEY
-          ? JSON.parse(process.env.FIREBASE_PRIVATE_KEY)
-          : undefined
+        privateKey: process.env.FIREBASE_PRIVATE_KEY ? JSON.parse(process.env.FIREBASE_PRIVATE_KEY) : undefined
       },
-      databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL
-        ? process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL
-        : ""
+      databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL ? process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL : ""
     },
     firebaseClientInitConfig: {
-      apiKey: process.env.NEXT_PUBLIC_FIREBASE_PUBLIC_API_KEY
-        ? process.env.NEXT_PUBLIC_FIREBASE_PUBLIC_API_KEY
-        : "",
+      apiKey: process.env.NEXT_PUBLIC_FIREBASE_PUBLIC_API_KEY ? process.env.NEXT_PUBLIC_FIREBASE_PUBLIC_API_KEY : "",
       authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
       databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL,
       projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID
