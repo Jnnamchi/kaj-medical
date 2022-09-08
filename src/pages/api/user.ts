@@ -48,7 +48,7 @@ export default async (req: any, res: any) => {
         return res.status(403).json({ error: "Not authorized" });
       }
 
-      const { fullName, entity } = JSON.parse(req.body);
+      const body = JSON.parse(req.body);
 
       const userDB = await getDocs(databaseRef);
       const users = userDB.docs.map((doc) => ({
@@ -60,12 +60,9 @@ export default async (req: any, res: any) => {
 
       try {
         if (self) {
-          await updateDoc(doc(databaseRef, self.docId), {
-            user_name: fullName,
-            user_type: entity
-          });
+          await updateDoc(doc(databaseRef, self.docId), body);
         }
-        return res.status(200).json({ fullName, entity });
+        return res.status(200).json(body);
       } catch (err) {
         return res.status(403).json({ error: "Update data failed" });
       }

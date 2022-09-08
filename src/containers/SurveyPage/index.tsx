@@ -17,7 +17,7 @@ const SurveyPage = () => {
 
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState({
-    to: "",
+    to: [],
     firstName: "",
     lastName: "",
     email: "",
@@ -242,6 +242,7 @@ const DocumentStep = (props: DocumentStepInterface) => {
 
 const EkycStep = (props: EkycStepInterface) => {
   const handleSubmit = (values: any) => {
+    console.log("🚀 ~ file: index.tsx ~ line 245 ~ handleSubmit ~ values", values);
     props.next(values, true);
   };
 
