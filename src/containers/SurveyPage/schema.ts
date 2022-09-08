@@ -47,3 +47,7 @@ export const ekycSchema = Yup.object().shape({
   governmentId: Yup.mixed().required("A file is required"),
   passport: Yup.mixed().required("A file is required")
 });
+
+export const permissionSchema = Yup.object().shape({
+  companyName: Yup.string().required("Company Name Required")
+});

@@ -209,3 +209,13 @@ export const matchedDocumentFiles = {
   brokerageAgency: ["companyRegistration", "registrationCertifications", "VATnumberCode"],
   medicalFacility: ["companyRegistration"]
 };
+
+export const permissionFields = {
+  inquiry: [
+    {
+      name: "companyName",
+      label: "Company Name",
+      control: "input"
+    }
+  ]
+};
