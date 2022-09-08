@@ -6,12 +6,12 @@ import { useEffect, useState } from "react";
 const HomePage = () => {
   const authUser = useAuthUser();
   const router = useRouter();
-  const [enabled, setEnabled] = useState(false);
+  const [userData, setUserData] = useState<any>(null);
 
   useEffect(() => {
     getUserData().then((res) => {
-      if (res?.self?.acceptingInquiries) {
-        setEnabled(true);
+      if (res?.self) {
+        setUserData(res?.self);
       }
       if (res && (!res.self || (res.self && !res.self.user_type))) {
         router.push("/onboard");
@@ -39,7 +39,7 @@ const HomePage = () => {
       <div className="p-6 py-8 space-y-8">
         <p className="text-xl text-center">
           Hello
-          <span className="ml-2 font-semibold ">{authUser.displayName}</span>
+          <span className="ml-2 font-semibold ">{userData?.user_name}</span>
         </p>
         <div className="flex justify-center space-x-4 text-sm">
           <Link href="/survey">
@@ -52,7 +52,7 @@ const HomePage = () => {
             <div className="px-6 py-2 text-gray-800 cursor-pointer bg-neutral-200 ">View my Inquiries</div>
           </Link>
         </div>
-        {!enabled ? (
+        {!userData?.acceptingInquiries ? (
           <p className="text-center ">
             You are not enabled to accept inquiries yet,
             <span onClick={() => router.push("/inquiryPermission")} className="ml-2 underline cursor-pointer ">
