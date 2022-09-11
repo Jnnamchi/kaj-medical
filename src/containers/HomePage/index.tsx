@@ -34,6 +34,35 @@ const HomePage = () => {
     return response.json();
   };
 
+  const handleClickDisableBtn = async () => {
+    const result = confirm(
+      "Are you sure? You will not be able to receive inquiries, but your inquiry meta data will be saved for easy re-enablement"
+    );
+    if (result) {
+      const token = await authUser.getIdToken();
+
+      const response = await fetch("/api/user", {
+        method: "PUT",
+        headers: {
+          Authorization: token || "unauthenticated"
+        },
+        body: JSON.stringify({
+          acceptingInquiries: false
+        })
+      });
+      if (response.ok) {
+        getUserData().then((res) => {
+          if (res?.self) {
+            setUserData(res?.self);
+          }
+        });
+        router.push("/");
+      }
+
+      // Delete logic goes here
+    }
+  };
+
   return (
     <div className="container px-4 mx-auto">
       <div className="p-6 py-8 space-y-8">
@@ -55,18 +84,26 @@ const HomePage = () => {
         {!userData?.acceptingInquiries ? (
           <p className="text-center ">
             You are not enabled to accept inquiries yet,
-            <span onClick={() => router.push("/inquiryPermission")} className="ml-2 underline cursor-pointer ">
+            <span
+              onClick={() => {
+                if (userData.inquiryMetadata) {
+                  router.push("/inquiryPermission/edit");
+                } else {
+                  router.push("/inquiryPermission/create");
+                }
+              }}
+              className="ml-2 underline cursor-pointer ">
               enable yourself now.
             </span>
           </p>
         ) : (
           <p className="text-center ">
             You are enabled for accepting inquiries,
-            <span onClick={() => router.push("/inquiryPermission")} className="ml-2 underline cursor-pointer ">
+            <span onClick={() => router.push("/inquiryPermission/edit")} className="ml-2 underline cursor-pointer ">
               edit your details
             </span>
             {" or "}
-            <span onClick={() => router.push("/inquiryPermission")} className="underline cursor-pointer ">
+            <span onClick={handleClickDisableBtn} className="underline cursor-pointer ">
               disable yourself now
             </span>
           </p>
