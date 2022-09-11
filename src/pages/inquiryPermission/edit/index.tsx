@@ -6,10 +6,16 @@ import { permissionFields } from "@/utils/data";
 import Layout from "@/components/layout";
 import { permissionSchema } from "@/containers/SurveyPage/schema";
 import FormikControl from "@/components/surveyPage/SurveyFormikControl";
+import { useEffect, useState } from "react";
 
-function InquiryPermission() {
+function InquiryPermissionEdit() {
   const authUser = useAuthUser();
   const router = useRouter();
+
+  const [initValues, setInitValues] = useState({
+    companyName: ""
+  });
+
   const handleSubmit = async (values: any) => {
     const token = await authUser.getIdToken();
 
@@ -31,15 +37,37 @@ function InquiryPermission() {
     }
   };
 
+  const getUserData = async () => {
+    const token = await authUser.getIdToken();
+    if (!token) {
+      return;
+    }
+
+    const response = await fetch("/api/user", {
+      method: "GET",
+      headers: {
+        Authorization: token
+      }
+    });
+    return response.json();
+  };
+
+  useEffect(() => {
+    getUserData().then((res) => {
+      if (res?.self) {
+        setInitValues(res?.self?.inquiryMetadata);
+      }
+    });
+  }, [authUser]);
+
   return (
     <div>
       <Layout>
         <div className="max-w-2xl p-4 mx-auto ">
           <Formik
+            enableReinitialize
             validationSchema={permissionSchema}
-            initialValues={{
-              companyName: ""
-            }}
+            initialValues={initValues}
             onSubmit={handleSubmit}>
             {(formik) => (
               <Form>
@@ -62,9 +90,9 @@ function InquiryPermission() {
   );
 }
 
-InquiryPermission.requireAuth = true;
+InquiryPermissionEdit.requireAuth = true;
 
 export default withAuthUser({
   whenUnauthedBeforeInit: AuthAction.SHOW_LOADER,
   whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN
-})(InquiryPermission);
+})(InquiryPermissionEdit);
