@@ -85,13 +85,14 @@ const HomePage = () => {
           <p className="text-center ">
             You are not enabled to accept inquiries yet,
             <span
-              onClick={() => {
-                if (userData.inquiryMetadata) {
-                  router.push("/inquiryPermission/edit");
-                } else {
-                  router.push("/inquiryPermission/create");
-                }
-              }}
+              // onClick={() => {
+              //   if (userData.inquiryMetadata) {
+              //     router.push("/inquiryPermission/edit");
+              //   } else {
+              //     router.push("/inquiryPermission/create");
+              //   }
+              // }}
+              onClick={()=>router.push('/inquiry')}
               className="ml-2 underline cursor-pointer ">
               enable yourself now.
             </span>

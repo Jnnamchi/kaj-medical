@@ -49,5 +49,9 @@ export const ekycSchema = Yup.object().shape({
 });
 
 export const permissionSchema = Yup.object().shape({
-  companyName: Yup.string().required("Company Name Required")
+  description: Yup.string().required("Description Required"),
+  videoUpload: Yup.mixed().required("A file is required"),
+  catalogueUpload: Yup.mixed().required("A file is required"),
+  workUs: Yup.string().required("This field is Required"),
+  
 });

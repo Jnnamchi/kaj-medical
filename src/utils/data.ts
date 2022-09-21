@@ -210,6 +210,58 @@ export const matchedDocumentFiles = {
   medicalFacility: ["companyRegistration"]
 };
 
+export const permissions = {
+  factory: {
+    label: "Factory Walkthrough",
+    fields: [
+      {
+        name: "description",
+        label: "Description",
+        control: "input"
+      },
+      {
+        name: "videoUpload",
+        label: "Video Upload",
+        control: "input",
+        type: "file"
+      }
+    ]
+  },
+  product: {
+    label: "Product Catalogue",
+    fields: [
+      {
+        name: "catalogueUpload",
+        label: "Upload Product Catalogue",
+        control: "input",
+        type: "file"
+      }
+    ]
+  },
+  workWithUs: {
+    label: "Work With Us",
+    fields: [
+      {
+        name: "certification",
+        label: "Certification",
+        control: "input",
+        type: "file"
+      },
+      {
+        name: "standards",
+        label: "Standards",
+        control: "input",
+        type: "file"
+      },
+      {
+        name: "workUs",
+        label: "How to work with us",
+        control: "textarea"
+      }
+    ]
+  }
+};
+
 export const permissionFields = {
   inquiry: [
     {
