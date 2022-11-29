@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { Form, Formik } from "formik";
 import { useRouter } from "next/router";
-import { v4 } from "uuid";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+// import { v4 } from "uuid";
+// import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { AuthAction, useAuthUser, withAuthUser } from "next-firebase-auth";
 
-import { storage } from "../../config/firebase";
+// import { storage } from "../../config/firebase";
 import { documentSchema, ekycSchema, inquirySchema } from "./schema";
 import FormikControl from "../../components/surveyPage/SurveyFormikControl";
 import { documentInitValues, matchedDocumentFiles, surveyFields } from "../../utils/data";
@@ -35,14 +35,14 @@ const SurveyPage = () => {
 
   type ObjectKey = keyof typeof documentInitValues;
 
-  const uploadFile = async (imageUpload: File) => {
-    console.log("🚀 ~ file: index.tsx:38 ~ uploadFile ~ imageUpload", imageUpload);
-    if (imageUpload == null) return;
-    const imageRef = ref(storage, `images/${imageUpload.name + v4()}`);
-    const snapshot = await uploadBytes(imageRef, imageUpload);
-    const url = await getDownloadURL(snapshot.ref);
-    return url;
-  };
+  // const uploadFile = async (imageUpload: File) => {
+  //   console.log("🚀 ~ file: index.tsx:38 ~ uploadFile ~ imageUpload", imageUpload);
+  //   if (imageUpload == null) return;
+  //   const imageRef = ref(storage, `images/${imageUpload.name + v4()}`);
+  //   const snapshot = await uploadBytes(imageRef, imageUpload);
+  //   const url = await getDownloadURL(snapshot.ref);
+  //   return url;
+  // };
 
   useEffect(() => {
     if (documentInitValues[formData.entityType as ObjectKey]) {
