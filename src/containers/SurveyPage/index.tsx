@@ -10,6 +10,7 @@ import { documentSchema, ekycSchema, inquirySchema } from "./schema";
 import FormikControl from "../../components/surveyPage/SurveyFormikControl";
 import { documentInitValues, matchedDocumentFiles, surveyFields } from "../../utils/data";
 import { DocumentStepInterface, EkycStepInterface, InquiryStepInterface } from "./interface";
+import axios from "axios";
 
 const SurveyPage = () => {
   const router = useRouter();
@@ -35,6 +36,7 @@ const SurveyPage = () => {
   type ObjectKey = keyof typeof documentInitValues;
 
   const uploadFile = async (imageUpload: File) => {
+    console.log("🚀 ~ file: index.tsx:38 ~ uploadFile ~ imageUpload", imageUpload);
     if (imageUpload == null) return;
     const imageRef = ref(storage, `images/${imageUpload.name + v4()}`);
     const snapshot = await uploadBytes(imageRef, imageUpload);
@@ -57,7 +59,25 @@ const SurveyPage = () => {
       [...(matchedDocumentFiles[formData.entityType as FileObjectKey] || []), "passport", "governmentId"].map(
         async (file) => {
           if (file !== "VATnumberCode") {
-            formData[file] = await uploadFile(formData[file]);
+            // formData[file] = await uploadFile(formData[file]);
+            // this is tampering test part
+            const formSubmit = new FormData();
+            formSubmit.append("filename", formData[file].name);
+            formSubmit.append("doc", formData[file]);
+
+            axios
+              .post("http://pdf-analyser.edpsciences.org/check", formSubmit, {
+                headers: {
+                  "Content-Type": "multipart/form-data; boundary=----WebKitFormBoundaryxXxXxXx"
+                }
+              })
+              .then(function (response) {
+                console.log("🚀 ~ file: index.tsx:92 ~ response", response);
+                // console.log(response.data);
+              })
+              .catch(function (error) {
+                console.log(error.response.data);
+              });
           } else {
             formData[file] = formData[file];
           }
@@ -242,7 +262,6 @@ const DocumentStep = (props: DocumentStepInterface) => {
 
 const EkycStep = (props: EkycStepInterface) => {
   const handleSubmit = (values: any) => {
-    console.log("🚀 ~ file: index.tsx ~ line 245 ~ handleSubmit ~ values", values);
     props.next(values, true);
   };
 

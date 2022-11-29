@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "add": "^2.0.6",
+    "axios": "^1.2.0",
     "firebase": "^9.8.4",
     "firebase-admin": "^11.0.0",
     "formik": "^2.2.9",
