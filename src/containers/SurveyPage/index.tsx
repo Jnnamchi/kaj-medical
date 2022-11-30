@@ -36,7 +36,6 @@ const SurveyPage = () => {
   type ObjectKey = keyof typeof documentInitValues;
 
   // const uploadFile = async (imageUpload: File) => {
-  //   console.log("🚀 ~ file: index.tsx:38 ~ uploadFile ~ imageUpload", imageUpload);
   //   if (imageUpload == null) return;
   //   const imageRef = ref(storage, `images/${imageUpload.name + v4()}`);
   //   const snapshot = await uploadBytes(imageRef, imageUpload);
@@ -73,7 +72,6 @@ const SurveyPage = () => {
               })
               .then(function (response) {
                 console.log("🚀 ~ file: index.tsx:92 ~ response", response);
-                // console.log(response.data);
               })
               .catch(function (error) {
                 console.log(error.response.data);
