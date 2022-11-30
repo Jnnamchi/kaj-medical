@@ -65,7 +65,7 @@ const SurveyPage = () => {
             formSubmit.append("doc", formData[file]);
 
             axios
-              .post("http://pdf-analyser.edpsciences.org/check", formSubmit, {
+              .post("https://pdf-analyser.edpsciences.org/check", formSubmit, {
                 headers: {
                   "Content-Type": "multipart/form-data; boundary=----WebKitFormBoundaryxXxXxXx"
                 }
