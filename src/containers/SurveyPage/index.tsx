@@ -61,21 +61,19 @@ const SurveyPage = () => {
             // formData[file] = await uploadFile(formData[file]);
             // this is tampering test part
             const formSubmit = new FormData();
-            formSubmit.append("filename", formData[file].name);
-            formSubmit.append("doc", formData[file]);
+            if (file === "passport") {
+              formSubmit.append("filename", formData["passport"].name);
+              formSubmit.append("doc", formData["passport"]);
 
-            await  axios
-              .post("https://pdf-analyser.edpsciences.org/check", formSubmit, {
-                headers: {
-                  "Content-Type": "multipart/form-data; boundary=----WebKitFormBoundaryxXxXxXx"
-                }
-              })
-              .then(function (response) {
-                console.log("🚀 ~ file: index.tsx:92 ~ response", response);
-              })
-              .catch(function (error) {
-                console.log(error.response.data);
-              });
+              axios
+                .post("api/tamper-detect", formSubmit)
+                .then(function (response) {
+                  console.log("🚀 ~ file: index.tsx:92 ~ response", response);
+                })
+                .catch(function (error) {
+                  console.log(error.response.data);
+                });
+            }
           } else {
             formData[file] = formData[file];
           }
