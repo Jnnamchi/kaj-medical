@@ -16,7 +16,7 @@ class MyDocument extends Document {
           <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
           <link rel="manifest" href="/site.webmanifest" />
           <meta httpEquiv="Content-type" content="text/html; charset=UTF-8" />
-          {/* <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" /> */}
+          <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
         </Head>
         <body>
           <Main />
