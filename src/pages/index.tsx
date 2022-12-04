@@ -5,30 +5,23 @@ import HomePage from "../containers/HomePage";
 
 export default function Home() {
   useEffect(() => {
-    const getData = async () => {
-      const form: any = document.querySelector("form");
+    const form: any = document.querySelector("form");
 
-      if (form) {
-        console.log("🚀 ~ file: index.tsx:11 ~ useEffect ~ form", form);
-        form.addEventListener("submit", async (e: any) => {
-          e.preventDefault();
-          const formData = new FormData(form);
-          await axios
-            .post("http://pdf-analyser.edpsciences.org/check", formData, {
-              headers: {
-                "Content-Type": "multipart/form-data"
-              }
-            })
-            .then((res) => {
-              console.log(res);
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-        });
-      }
-    };
-    getData();
+    if (form) {
+      console.log("🚀 ~ file: index.tsx:11 ~ useEffect ~ form", form);
+      form.addEventListener("submit", (e: any) => {
+        e.preventDefault();
+        const formData = new FormData(form);
+        axios
+          .post("http://pdf-analyser.edpsciences.org/check", formData, {})
+          .then((res) => {
+            console.log(res);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      });
+    }
   }, []);
 
   return (
