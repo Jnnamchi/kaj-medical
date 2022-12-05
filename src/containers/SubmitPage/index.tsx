@@ -49,36 +49,12 @@ const SubmitPage = () => {
                   <p
                     key={`${id}-${idx}`}
                     onClick={() => {
-                      router.push(data[matchedData.name]);
+                      router.push(data[matchedData.name]["deployUrl"]);
                     }}
                     className="overflow-hidden text-blue-500 underline cursor-pointer text-ellipsis whitespace-nowrap">
                     {matchedData.label}
                   </p>
-                  {idx % 2 ? (
-                    <div className="w-5 h-4 text-green-600">
-                      <svg
-                        className="fill-current "
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        width="24"
-                        height="24">
-                        <path fill="none" d="M0 0h24v24H0z" />
-                        <path d="M10 15.172l9.192-9.193 1.415 1.414L10 18l-6.364-6.364 1.414-1.414z" />
-                      </svg>
-                    </div>
-                  ) : (
-                    <div className="w-5 h-4 text-red-600">
-                      <svg
-                        className="fill-current "
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        width="24"
-                        height="24">
-                        <path fill="none" d="M0 0h24v24H0z" />
-                        <path d="M12 10.586l4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95L7.05 5.636z" />
-                      </svg>
-                    </div>
-                  )}
+                  <TamperStatus status={!data[matchedData.name]?.tamperingDetected?.createEditTimes?.result} />
                 </div>
               );
             })}
@@ -88,16 +64,23 @@ const SubmitPage = () => {
         const EkycDetails = () => (
           <div className="max-w-full overflow-hidden text-ellipsis">
             <p>{`DoB: ${data.birth}`}</p>
-            <p
-              onClick={() => router.push(data.governmentId)}
-              className="overflow-hidden text-blue-500 underline cursor-pointer whitespace-nowrap text-ellipsis">
-              Government ID
-            </p>
-            <p
-              onClick={() => router.push(data.passport)}
-              className="overflow-hidden text-blue-500 underline cursor-pointer whitespace-nowrap text-ellipsis">
-              Passport
-            </p>
+            <div className="flex space-x-2 ">
+              <p
+                onClick={() => router.push(data.governmentId["deployUrl"])}
+                className="overflow-hidden text-blue-500 underline cursor-pointer whitespace-nowrap text-ellipsis">
+                Government ID
+              </p>
+              <TamperStatus status={!data.governmentId?.tamperingDetected?.createEditTimes?.result} />
+            </div>
+            <div className="flex space-x-2 ">
+              <p
+                onClick={() => router.push(data.passport["deployUrl"])}
+                className="overflow-hidden text-blue-500 underline cursor-pointer whitespace-nowrap text-ellipsis">
+                Passport
+              </p>
+
+              <TamperStatus status={!data.passport?.tamperingDetected?.createEditTimes?.result} />
+            </div>
           </div>
         );
 
@@ -130,6 +113,7 @@ const SubmitPage = () => {
     getSurveyData()
       .then((res) => {
         if (res) {
+          console.log("🚀 ~ file: index.tsx:134 ~ .then ~ res", res);
           getTableData(res);
         }
       })
@@ -158,6 +142,28 @@ const SubmitPage = () => {
         />
       </div>
     </div>
+  );
+};
+
+const TamperStatus = ({ status }: { status: boolean }) => {
+  return (
+    <>
+      {status ? (
+        <div className="w-5 h-4 text-green-600">
+          <svg className="fill-current " viewBox="0 0 24 24" width="24" height="24">
+            <path fill="none" d="M0 0h24v24H0z" />
+            <path d="M10 15.172l9.192-9.193 1.415 1.414L10 18l-6.364-6.364 1.414-1.414z" />
+          </svg>
+        </div>
+      ) : (
+        <div className="w-5 h-4 text-red-600">
+          <svg className="fill-current " xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+            <path fill="none" d="M0 0h24v24H0z" />
+            <path d="M12 10.586l4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95L7.05 5.636z" />
+          </svg>
+        </div>
+      )}
+    </>
   );
 };
 

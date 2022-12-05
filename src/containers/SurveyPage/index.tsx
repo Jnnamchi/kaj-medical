@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { Form, Formik } from "formik";
 import { useRouter } from "next/router";
-// import { v4 } from "uuid";
-// import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { v4 } from "uuid";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { AuthAction, useAuthUser, withAuthUser } from "next-firebase-auth";
 
-// import { storage } from "../../config/firebase";
+import { storage } from "../../config/firebase";
 import { documentSchema, ekycSchema, inquirySchema } from "./schema";
 import FormikControl from "../../components/surveyPage/SurveyFormikControl";
 import { documentInitValues, matchedDocumentFiles, surveyFields } from "../../utils/data";
@@ -35,13 +35,13 @@ const SurveyPage = () => {
 
   type ObjectKey = keyof typeof documentInitValues;
 
-  // const uploadFile = async (imageUpload: File) => {
-  //   if (imageUpload == null) return;
-  //   const imageRef = ref(storage, `images/${imageUpload.name + v4()}`);
-  //   const snapshot = await uploadBytes(imageRef, imageUpload);
-  //   const url = await getDownloadURL(snapshot.ref);
-  //   return url;
-  // };
+  const uploadFile = async (imageUpload: File) => {
+    if (imageUpload == null) return;
+    const imageRef = ref(storage, `images/${imageUpload.name + v4()}`);
+    const snapshot = await uploadBytes(imageRef, imageUpload);
+    const url = await getDownloadURL(snapshot.ref);
+    return url;
+  };
 
   useEffect(() => {
     if (documentInitValues[formData.entityType as ObjectKey]) {
@@ -58,22 +58,36 @@ const SurveyPage = () => {
       [...(matchedDocumentFiles[formData.entityType as FileObjectKey] || []), "passport", "governmentId"].map(
         async (file) => {
           if (file !== "VATnumberCode") {
-            // formData[file] = await uploadFile(formData[file]);
             // this is tampering test part
             const formSubmit = new FormData();
-            if (file === "passport") {
-              formSubmit.append("filename", formData["passport"].name);
-              formSubmit.append("doc", formData["passport"]);
+            formSubmit.append("filename", formData[file].name);
+            formSubmit.append("doc", formData[file]);
+            const { createdDate, modifiedDate }: any = await axios
+              .post("api/tamper-detect", formSubmit)
+              .then(function (response) {
+                const createdDate = response.data.substring(
+                  response.data.indexOf("CreationDate") + 23,
+                  response.data.indexOf("CreationDate") + 31
+                );
+                const modifiedDate = response.data.substring(
+                  response.data.indexOf("ModDate") + 18,
+                  response.data.indexOf("ModDate") + 26
+                );
+                return { createdDate, modifiedDate };
+              })
+              .catch(function (error) {
+                console.log(error.response.data);
+              });
 
-              axios
-                .post("api/tamper-detect", formSubmit)
-                .then(function (response) {
-                  console.log("🚀 ~ file: index.tsx:92 ~ response", response);
-                })
-                .catch(function (error) {
-                  console.log(error.response.data);
-                });
-            }
+            formData[file]["deployUrl"] = await uploadFile(formData[file]);
+            formData[file]["tamperingDetected"] = {
+              createEditTimes: {
+                createdTime: createdDate,
+                editTime: modifiedDate,
+                desc: "Edit time" + (createdDate === modifiedDate ? " same with " : " after ") + "create time",
+                result: createdDate !== modifiedDate
+              }
+            };
           } else {
             formData[file] = formData[file];
           }
